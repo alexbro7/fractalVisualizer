@@ -206,20 +206,17 @@ std::map<const std::string, std::vector<sf::Color> > loadColors() {
     for (std::string::size_type i = 0; i < fileContent.length() - 1; i++) if (!isDigit(fileContent[i]) && fileContent[i+1] == '.') {fileContent.erase(i + 1, 1); i++;}
     if (fileContent.empty()) {std::cerr << "Error: colorPalett is empty" << std::endl; return colors;}
     fileContent += ".;";
-    std::cout << fileContent << std::endl;
-    std::string::size_type i = 0, l = 0;
-    for (; i < fileContent.length(); i++){
-std::cout << "HELLO" << std::endl;
-        if (isDigit(fileContent[i]) == true) {std::cerr << "Error: colorPalett:0 l:" << l << "." << std::endl; colors.clear(); return colors;}
-std::cout << "A:"<<i<<":" << fileContent[i] <<":"<<isDigit(fileContent[i]) << std::endl;
+    for (std::string::size_type i = 0; i < fileContent.length(); i++){
+        if (isDigit(fileContent[i]) == true) {std::cerr << "Error: colorPalett:0 c:" << i << "." << std::endl; colors.clear(); return colors;}
+std::cout << fileContent << std::endl << i << ":" << fileContent[i] <<":"<< isDigit(fileContent[i]) << std::endl;
         if (isDigit(fileContent[i] == false) || isDigit(fileContent[i] == true))
         {
-std::cout << "COUCOU" << fileContent[i] << std::endl;
+std::cout << "HELLO" << fileContent[i] << std::endl;
             nTmp += fileContent[i];
-            if (i == fileContent.length()){std::cerr << "Error: colorPalett:1 l:" << l << "." << std::endl<< fileContent.substr(0, fileContent.length() - i) << std::endl; colors.clear(); return colors;}
+            if (i == fileContent.length()){std::cerr << "Error: colorPalett:1 c:" << i << "." << std::endl; colors.clear(); return colors;}
             i++;
         }
-        if (nTmp.empty()) {std::cerr << "Error: colorPalett:2 l:" << l << "." << std::endl<< fileContent.substr(0, fileContent.length() - i) << std::endl; colors.clear(); return colors;}
+        if (nTmp.empty()) {std::cerr << "Error: colorPalett:2 c:" << i << "." << std::endl; colors.clear(); return colors;}
 std::cout << nTmp << std::endl;
         for (int rTmp = 0, gTmp = 0, bTmp = 0, iTmp = 0;i < fileContent.length() && isDigit(fileContent[i]); i++)
         {
@@ -228,11 +225,12 @@ std::cout << nTmp << std::endl;
                 while (i < fileContent.length() && isDigit(fileContent[i]))
                 {
                     iTmp = iTmp * 10 + (fileContent[i] - '0');
-                    if (iTmp > 255) {std::cerr << "Error: colorPalett:4 l:" << l << "." << std::endl; colors.clear(); return colors;};
+                    if (iTmp > 255) {std::cerr << "Error: colorPalett:4 c:" << i << "." << std::endl; colors.clear(); return colors;};
                 }
-                if (i == s.length() || (a < 2 && fileContent[i] != ',') || (a == 2 && fileContent[i] != '.')) {std::cerr << "Error: colorPalett:4 l:" << l << "." << std::endl; colors.clear(); return colors;}
+                if (i == s.length() || (a < 2 && fileContent[i] != ',') || (a == 2 && fileContent[i] != '.')) {std::cerr << "Error: colorPalett:4 l:" << i << "." << std::endl; colors.clear(); return colors;}
                 if (a == 0) {rTmp = iTmp;} else if (a == 1) {gTmp = iTmp;} else {bTmp = iTmp;}
             }
+std::cout << rTmp << "," << gTmp << "," << bTmp << std::endl;
             vTmp.push_back(sf::Color(static_cast<sf::Uint8>(rTmp), static_cast<sf::Uint8>(gTmp), static_cast<sf::Uint8>(bTmp)));
         }
         colors.insert(std::make_pair(nTmp, vTmp)); nTmp.clear(); vTmp.clear();
