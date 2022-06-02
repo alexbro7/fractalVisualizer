@@ -1,10 +1,3 @@
-// #include <stdio.h>
-// #include <iostream>
-// #include <fstream>
-// #include <vector>
-// #include <map>
-// #include <SFML/Graphics.hpp>
-
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -12,19 +5,25 @@
 #include <map>
 #include <SFML/Graphics.hpp>
 
-const int W = 960;
-const int H = 540;
-
 int max_iter = 128;
 double zoom = 1.0;
 double min_re = -2.5, max_re = 1;
 double min_im = -1, max_im = 1;
+const std::string man("A/D/W/S = move(</>/^/v)\nQ/E = zoom(-/+)\nF/R = iteration(-/+)\nZ/X = colors palett(</>)");
+
 
 bool error_msg(const std::string& s) {std::cerr << s << std::endl; return false;}
 
 bool isBlank(const char& c) {return (c == ' ' || c == '\n' || c == '\t' || c == '\v' || c == '\f' || c == '\r') ? true : false;}
 
 bool isDigit(const char& c) {return (c >= '0' && c <= '9') ? true : false;}
+
+bool isInteger(const char* s) {for (int i = 0; i < strlen(s); i++) if (!isDigit(s[i])) return false; return true;}
+
+sf::Color linear_interpolation(const sf::Color& v, const sf::Color& u, double a){
+    auto const b = 1 - a;
+    return sf::Color(b*v.r + a * u.r, b * v.g + a * u.g, b * v.b + a * u.b);
+}
 
 std::map<const std::string, std::vector<sf::Color> > loadColors() {
     std::map<const std::string, std::vector<sf::Color> >  colors;
@@ -60,9 +59,8 @@ std::map<const std::string, std::vector<sf::Color> > loadColors() {
                 }
                 if (i == s.length() || (a < 2 && fileContent[i] != ',') || (a == 2 && fileContent[i] != '.')) {std::cerr << "Error: colorPalett:5 c:" << i << "." << std::endl; colors.clear(); return colors;} else i++;
                 if (a == 0) {rTmp = iTmp;} else if (a == 1) {gTmp = iTmp;} else {bTmp = iTmp;}
-                // if (a == 2) {i -= 1; cTmp = sf::Color(rTmp, gTmp, bTmp); vTmp.push_back(cTmp);
                 if (a == 2) {i -= 1; cTmp = sf::Color(static_cast<sf::Uint8>(rTmp), static_cast<sf::Uint8>(gTmp), static_cast<sf::Uint8>(bTmp)); vTmp.push_back(cTmp);
-std::cout << rTmp << "," << gTmp << "," << bTmp << std::endl;}
+                }
             }
         }
         vTmp2 = vTmp; nTmp2 = nTmp; colors.insert(std::make_pair(nTmp2, vTmp2)); nTmp.clear(); vTmp.clear();
@@ -70,13 +68,12 @@ std::cout << rTmp << "," << gTmp << "," << bTmp << std::endl;}
     return colors;
 }
 
-sf::Color linear_interpolation(const sf::Color& v, const sf::Color& u, double a){
-    auto const b = 1 - a;
-    return sf::Color(b*v.r + a * u.r, b * v.g + a * u.g, b * v.b + a * u.b);
-}
-
-void drawMandelbrot(sf::Image *image, std::vector<sf::Color> colors){
-    for (int y = 0; y < H; y++) for (int x = 0; x < W; x++){
+#define NB_THREADS 1
+void drawMandelbrot(sf::Image *image, std::vector<sf::Color> colors, const int& W, const int& H){
+// for (std::vector<sf::Color>::const_iterator it = colors.begin(); it != colors.end(); it++) std::cout << *it << std::endl;
+    // for (int y = 0; y < H; y++) for (int x = 0; x < W; x++){
+    for (int i = 0, int j = 0; i < W * H; i++){
+        if (i % CE_THREAD)
         double cr = min_re + (max_re - min_re) * x / W;
         double ci = min_im + (max_im - min_im) * y / H;
         double re = 0, im = 0;
@@ -90,19 +87,20 @@ void drawMandelbrot(sf::Image *image, std::vector<sf::Color> colors){
         static const auto max_color = colors.size() - 1;
         if (iter == max_iter) iter = 0;
         double mu = 1.0 * iter / max_iter;
-        //scale mu to be in the range of colors
         mu *= max_color;
         auto i_mu = static_cast<size_t>(mu);
-// std::cout << " A" << std::endl;
         const sf::Color color1 = *(colors.begin() + i_mu);
         const sf::Color color2 = *(colors.begin() + std::min(i_mu + 1, max_color));
-// std::cout << " B" << std::endl;
         sf::Color c = linear_interpolation(color1, color2, mu - i_mu);
         image->setPixel(x, y, sf::Color(c));
     }
 }
 
-int main(void){
+int main(int ac, char **av){
+    if (ac != 2) {std::cerr << "Error: invalid number of arguments. Use \"./fractol <window's width>\"" << std::endl; return 1;}
+    if (!isInteger(av[1])) {std::cerr << "Error: invalid width." << std::endl; return 1;}
+    int W = std::atoi(av[1]), H = W/16*9;
+    if (W < 16) {std::cerr << "Error: Window's width must be >= 16." << std::endl; return 1;}
     sf::RenderWindow    window(sf::VideoMode(W, H), "Mandelbrot");
     sf::Image image; image.create(W,H);
     sf::Texture texture;
@@ -110,16 +108,16 @@ int main(void){
     sf::Font font; font.loadFromFile("Helvetica.ttc");
     sf::Text text; text.setFont(font); text.setCharacterSize(24); text.setFillColor(sf::Color::Red);
     std::map<const std::string, std::vector<sf::Color> > colors = loadColors();
-    std::map<const std::string, std::vector<sf::Color> >::const_iterator it = colors.begin(); if (it == colors.end()) {std::cerr << "Error: colorPalett is empty" << std::endl; return 1;}
-    std::map<const std::string, std::vector<sf::Color> >::const_iterator it2;
-
-for (std::map<const std::string, std::vector<sf::Color> >::const_iterator it3 = colors.begin(); it3 != colors.end(); it3++){
-    std::cout << it3->first << std::endl;
-    for (std::vector<sf::Color>::const_iterator it4 = it3->second.begin(); it4 != it3->second.end(); it4++){
-        std::cout << "  " << (int)it4->r << "," << (int)it4->g << "," << (int)it4->b << std::endl;
-    }
+    if (colors.empty()) return 1;
+for (std::map<const std::string, std::vector<sf::Color> >::const_iterator it = colors.begin(); it != colors.end(); it++){
+    std::cout << it->first << ":"<< std::endl;
+    for (std::vector<sf::Color>::const_iterator it2 = it->second.begin(); it2 != it->second.end(); it2++)
+        std::cout << (int)it2->r << "," << (int)it2->g << "," << (int)it2->b << std::endl;
 }
-std::cout << "OK" << std::endl;
+    std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalett = colors.begin();
+    std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalettEnd = colors.end(); if (colors.size() > 1) colorPalettEnd--;
+
+    std::cout << man << std::endl;
     while (window.isOpen()){
         sf::Event e;
         while (window.pollEvent(e)){
@@ -149,29 +147,19 @@ std::cout << "OK" << std::endl;
                     if (e.key.code == sf::Keyboard::Q) {zoom_x(1.0 / 2); zoom /= 2;}
                     if (e.key.code == sf::Keyboard::E) {zoom_x(2); ; zoom *= 2;}
                 }
-                if ((e.key.code == sf::Keyboard::X || e.key.code == sf::Keyboard::Z) && colors.size() > 1) {it = colors.begin(); it2 = colors.end(); it2--;}
-                if (e.key.code == sf::Keyboard::Z && colors.size()) {
-                    if (it == colors.begin()) 
-                        {it = it2;} 
+                if (e.key.code == sf::Keyboard::Z && colors.size() > 1) {
+                    if (colorPalett == colors.begin()) 
+                        colorPalett = colorPalettEnd; 
                     else
-                        it--;
+                        colorPalett--;
                 }
-                if (e.key.code == sf::Keyboard::X && colors.size()) {
-                    if (it == it2)
-                        it = colors.begin();
+                if (e.key.code == sf::Keyboard::X && colors.size() > 1) {
+                    if (colorPalett == colorPalettEnd)
+                        colorPalett = colors.begin();
                     else
-                        it++;
+                        colorPalett++;
                 }
             }
-            // if (e.type == sf::Event::MouseWheelScrolled){
-                // if (e.MouseWheelScrolled){
-                    // if (e.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel){
-                        // if (e.mouseWheelScroll.delta > 0) max_iter *= 2;
-                        // else max_iter /= 2;
-                        // if (max_iter < 1) max_iter = 1;
-                    // }
-                // }
-            // }
             if (e.type == sf::Event::MouseButtonPressed){
                 auto zoom_x = [&](double z){
                     // mouse point will be new center point
@@ -192,57 +180,14 @@ std::cout << "OK" << std::endl;
             }
         }
         window.clear();
-        drawMandelbrot(&image, it->second);
+        drawMandelbrot(&image, colorPalett->second, W, H);
         texture.loadFromImage(image);
         sprite.setTexture(texture);
         window.draw(sprite);
-
         char str[100];
         sprintf(str, "max_iter: %d\nzoom:x%2.2lf", max_iter, zoom);
         text.setString(str);
         window.draw(text);
-
         window.display();
     }
 }
-
-// int main(void){
-//     std::map<const std::string, std::vector<sf::Color> >colors = loadColors();
-//     sf::RenderWindow    window(sf::VideoMode(W, H), "Fractol");
-//     sf::Image image; image.create(500,500);
-//     sf::Texture texture;
-//     sf::Sprite sprite;
-//     sf::Font font; font.loadFromFile("Helvetica.ttc");
-//     sf::Text text; text.setFont(font); text.setCharacterSize(24); text.setFillColor(sf::Color::White);
-//     std::vector<std::vector<sf::Color> >colors = loadColors();
-//     while (window.isOpen()){
-//         sf::Event e;
-//         while (window.pollEvent(e)){
-//             if (e.type == sf::Event::Closed) window.close();
-//             if (e.type == sf::Event::KeyPressed){
-//                 if (e.key.code == sf::Keyboard::Escape) window.close();
-//                 }
-//             }
-//             if (e.type == sf::Event::MouseButtonPressed){
-//                     // double cr = min_re + (max_re - min_re) * e.mouseButton.x / W;
-//                     // double ci = min_im + (max_im - min_im) * e.mouseButton.y / H;
-//                 if (e.mouseButton.button == sf::Mouse::Left) {
-
-//                 }
-//                 // if (e.mouseButton.button == sf::Mouse::Right) {}
-//             }
-//         }
-//         window.clear();
-//         drawMandelbrot(&image, colors);
-//         texture.loadFromImage(image);
-//         sprite.setTexture(texture);
-//         window.draw(sprite);
-
-//         char str[100];
-//         sprintf(str, "max_iter: %d\nzoom:x%2.2lf", max_iter, zoom);
-//         text.setString(str);
-//         window.draw(text);
-
-//         window.display();
-//     return 0;
-// }
