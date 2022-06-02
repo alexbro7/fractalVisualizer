@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <cstring>
 #include <SFML/Graphics.hpp>
 
 int max_iter = 128;
@@ -68,12 +69,7 @@ std::map<const std::string, std::vector<sf::Color> > loadColors() {
     return colors;
 }
 
-#define NB_THREADS 1
-void drawMandelbrot(sf::Image *image, std::vector<sf::Color> colors, const int& W, const int& H){
-// for (std::vector<sf::Color>::const_iterator it = colors.begin(); it != colors.end(); it++) std::cout << *it << std::endl;
-    // for (int y = 0; y < H; y++) for (int x = 0; x < W; x++){
-    for (int i = 0, int j = 0; i < W * H; i++){
-        if (i % CE_THREAD)
+sf::Color calculMandelbrotPixel(std::vector<sf::Color> colors, int x, int y, int W, int H){
         double cr = min_re + (max_re - min_re) * x / W;
         double ci = min_im + (max_im - min_im) * y / H;
         double re = 0, im = 0;
@@ -91,8 +87,17 @@ void drawMandelbrot(sf::Image *image, std::vector<sf::Color> colors, const int& 
         auto i_mu = static_cast<size_t>(mu);
         const sf::Color color1 = *(colors.begin() + i_mu);
         const sf::Color color2 = *(colors.begin() + std::min(i_mu + 1, max_color));
-        sf::Color c = linear_interpolation(color1, color2, mu - i_mu);
-        image->setPixel(x, y, sf::Color(c));
+        return linear_interpolation(color1, color2, mu - i_mu);
+}
+
+#define NB_THREADS 1
+void drawMandelbrot(sf::Image *image, std::vector<sf::Color> colors, const int& W, const int& H){
+    int thread_id = 0, x, y;
+    for (int i = 0; i < W * H; i++){
+        if (thread_id == NB_THREADS) thread_id = 0;
+        x = i % W; y = i / W;
+        image->setPixel(x, y, calculMandelbrotPixel(colors, x, y, W, H));
+        thread_id++;
     }
 }
 
