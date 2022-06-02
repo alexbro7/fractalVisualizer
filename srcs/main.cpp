@@ -44,11 +44,12 @@ std::map<const std::string, std::vector<sf::Color> > loadColors() {
     for (std::string::size_type i = 0; i < fileContent.length(); i++) {if (isBlank(fileContent[i])) {fileContent.erase(i, 1); i--;}}
     for (std::string::size_type f = fileContent.find(".,"); f != std::string::npos; f = fileContent.find(".,")) {fileContent.erase(f, 1);}
     for (std::string::size_type i = 0; i < fileContent.length() - 1; i++) if (!isDigit(fileContent[i]) && fileContent[i+1] == '.') {fileContent.erase(i + 1, 1); i++;}
-    if (fileContent.empty()) {std::cerr << "Error: colorPalett is empty" << std::endl; return colors;} else fileContent += ".;";
+    if (fileContent.empty()) {std::cerr << "Error: colorPalett is empty" << std::endl; return colors;} else fileContent += fileContent[fileContent.size() - 1] == '.' ? ";" : ".;";
     for (std::string::size_type i = 0; i < fileContent.length(); i++){
         if (i) i -= 1;
         if (isDigit(fileContent[i]) == true && fileContent[i] != ';') {std::cerr << "Error: colorPalett:0 c:" << i << "." << fileContent[i] << std::endl; colors.clear(); return colors;}
         if (fileContent[i] == ';') return colors;
+std::cout << "**" << fileContent << "[" << i << "]" << fileContent[i] << "*" << std::endl;
         for (;!isDigit(fileContent[i]); i++) {nTmp += fileContent[i]; if (i == fileContent.length()){std::cerr << "Error: colorPalett:1 c:" << i << "." << std::endl; colors.clear(); return colors;}}
         if (nTmp.empty()) {std::cerr << "Error: colorPalett:2 c:" << i << "." << std::endl; colors.clear(); return colors;}
         for (int rTmp = 0, gTmp = 0, bTmp = 0, iTmp = 0;i < fileContent.length() && isDigit(fileContent[i]); i++) {
