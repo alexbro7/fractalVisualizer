@@ -1,6 +1,6 @@
 NAME = prog
 CC = g++
-FLAGS = -std=c++11 #-W -Wall -Wextra -Werror
+FLAGS = -std=c++11 -g3 -fsanitize=address #-W -Wall -Wextra -Werror
 SFML = -I/usr/local/Cellar/sfml/2.5.1_1/include -L/usr/local/Cellar/sfml/2.5.1_1/lib -lsfml-graphics -lsfml-window -lsfml-system
 RM = rm -f
 SRCS =	srcs/main.cpp \

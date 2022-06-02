@@ -30,10 +30,9 @@ std::map<const std::string, std::vector<sf::Color> > loadColors() {
     std::map<const std::string, std::vector<sf::Color> >  colors;
     std::ifstream                       ifs("colorPalett", std::ios::in);
     if (!ifs) {std::cerr << "Error: can't open colorPalett." << std::endl; return colors;}
-    std::string                         fileContent = "", s = "", nTmp = "";
-    std::vector<sf::Color>              vTmp;
+    std::string                         fileContent = "", s = "", nTmp = "", nTmp2;
+    std::vector<sf::Color>              vTmp, vTmp2;
     sf::Color                           cTmp;
-    int                                 rTmp, gTmp, bTmp, iTmp;
     getline(ifs, s);
     fileContent += s;
     while (getline(ifs, s)) fileContent += "\n" + s;
@@ -52,18 +51,22 @@ std::map<const std::string, std::vector<sf::Color> > loadColors() {
         if (fileContent[i] == ';') return colors;
         for (;!isDigit(fileContent[i]); i++) {nTmp += fileContent[i]; if (i == fileContent.length()){std::cerr << "Error: colorPalett:1 c:" << i << "." << std::endl; colors.clear(); return colors;}}
         if (nTmp.empty()) {std::cerr << "Error: colorPalett:2 c:" << i << "." << std::endl; colors.clear(); return colors;}
-std::cout << nTmp << std::endl;
-        for (int rTmp = 0, gTmp = 0, bTmp = 0, iTmp;i < fileContent.length() && isDigit(fileContent[i]); i++) {
+        for (int rTmp = 0, gTmp = 0, bTmp = 0, iTmp = 0;i < fileContent.length() && isDigit(fileContent[i]); i++) {
             for (char a = 0; a < 3; a++) {
                 iTmp = 0;
                 for (;i < fileContent.length() && isDigit(fileContent[i]); i++){
-                    iTmp = iTmp * 10 + (fileContent[i] - '0'); if (iTmp > 255) {std::cerr << "Error: colorPalett:4 c:" << i << "." << std::endl; colors.clear(); return colors;}}
+                    iTmp = iTmp * 10 + (fileContent[i] - '0');
+                    if (iTmp > 255) {std::cerr << "Error: colorPalett:4 c:" << i << "." << std::endl; colors.clear(); return colors;}
+                }
                 if (i == s.length() || (a < 2 && fileContent[i] != ',') || (a == 2 && fileContent[i] != '.')) {std::cerr << "Error: colorPalett:5 c:" << i << "." << std::endl; colors.clear(); return colors;} else i++;
                 if (a == 0) {rTmp = iTmp;} else if (a == 1) {gTmp = iTmp;} else {bTmp = iTmp;}
-                if (a == 2) i -= 1;}
-std::cout << rTmp << "," << gTmp << "," << bTmp << std::endl;
-            vTmp.push_back(sf::Color(static_cast<sf::Uint8>(rTmp), static_cast<sf::Uint8>(gTmp), static_cast<sf::Uint8>(bTmp)));}
-        colors.insert(std::make_pair(std::string(nTmp), std::vector<sf::Color>(vTmp))); nTmp.clear(); vTmp.clear();}
+                // if (a == 2) {i -= 1; cTmp = sf::Color(rTmp, gTmp, bTmp); vTmp.push_back(cTmp);
+                if (a == 2) {i -= 1; cTmp = sf::Color(static_cast<sf::Uint8>(rTmp), static_cast<sf::Uint8>(gTmp), static_cast<sf::Uint8>(bTmp)); vTmp.push_back(cTmp);
+std::cout << rTmp << "," << gTmp << "," << bTmp << std::endl;}
+            }
+        }
+        vTmp2 = vTmp; nTmp2 = nTmp; colors.insert(std::make_pair(nTmp2, vTmp2)); nTmp.clear(); vTmp.clear();
+    }
     return colors;
 }
 
@@ -72,7 +75,7 @@ sf::Color linear_interpolation(const sf::Color& v, const sf::Color& u, double a)
     return sf::Color(b*v.r + a * u.r, b * v.g + a * u.g, b * v.b + a * u.b);
 }
 
-void drawMandelbrot(sf::Image *image, const std::vector<sf::Color>& colors){
+void drawMandelbrot(sf::Image *image, std::vector<sf::Color> colors){
     for (int y = 0; y < H; y++) for (int x = 0; x < W; x++){
         double cr = min_re + (max_re - min_re) * x / W;
         double ci = min_im + (max_im - min_im) * y / H;
@@ -90,8 +93,10 @@ void drawMandelbrot(sf::Image *image, const std::vector<sf::Color>& colors){
         //scale mu to be in the range of colors
         mu *= max_color;
         auto i_mu = static_cast<size_t>(mu);
-        const sf::Color color1 = colors[i_mu];
-        const sf::Color color2 = colors[std::min(i_mu + 1, max_color)];
+// std::cout << " A" << std::endl;
+        const sf::Color color1 = *(colors.begin() + i_mu);
+        const sf::Color color2 = *(colors.begin() + std::min(i_mu + 1, max_color));
+// std::cout << " B" << std::endl;
         sf::Color c = linear_interpolation(color1, color2, mu - i_mu);
         image->setPixel(x, y, sf::Color(c));
     }
@@ -105,8 +110,16 @@ int main(void){
     sf::Font font; font.loadFromFile("Helvetica.ttc");
     sf::Text text; text.setFont(font); text.setCharacterSize(24); text.setFillColor(sf::Color::Red);
     std::map<const std::string, std::vector<sf::Color> > colors = loadColors();
-    if (colors.empty()) return 1;
-    std::map<const std::string, std::vector<sf::Color> >::const_iterator it = colors.begin();
+    std::map<const std::string, std::vector<sf::Color> >::const_iterator it = colors.begin(); if (it == colors.end()) {std::cerr << "Error: colorPalett is empty" << std::endl; return 1;}
+    std::map<const std::string, std::vector<sf::Color> >::const_iterator it2;
+
+for (std::map<const std::string, std::vector<sf::Color> >::const_iterator it3 = colors.begin(); it3 != colors.end(); it3++){
+    std::cout << it3->first << std::endl;
+    for (std::vector<sf::Color>::const_iterator it4 = it3->second.begin(); it4 != it3->second.end(); it4++){
+        std::cout << "  " << (int)it4->r << "," << (int)it4->g << "," << (int)it4->b << std::endl;
+    }
+}
+std::cout << "OK" << std::endl;
     while (window.isOpen()){
         sf::Event e;
         while (window.pollEvent(e)){
@@ -136,8 +149,19 @@ int main(void){
                     if (e.key.code == sf::Keyboard::Q) {zoom_x(1.0 / 2); zoom /= 2;}
                     if (e.key.code == sf::Keyboard::E) {zoom_x(2); ; zoom *= 2;}
                 }
-                if (e.key.code == sf::Keyboard::Z) {if (colors.size() > 1) {if (it == colors.begin()) it = colors.end(); else it--;}}
-                if (e.key.code == sf::Keyboard::X) {if (colors.size() > 1) {if (it == colors.end()) it = colors.begin(); else it++;}}
+                if ((e.key.code == sf::Keyboard::X || e.key.code == sf::Keyboard::Z) && colors.size() > 1) {it = colors.begin(); it2 = colors.end(); it2--;}
+                if (e.key.code == sf::Keyboard::Z && colors.size()) {
+                    if (it == colors.begin()) 
+                        {it = it2;} 
+                    else
+                        it--;
+                }
+                if (e.key.code == sf::Keyboard::X && colors.size()) {
+                    if (it == it2)
+                        it = colors.begin();
+                    else
+                        it++;
+                }
             }
             // if (e.type == sf::Event::MouseWheelScrolled){
                 // if (e.MouseWheelScrolled){
