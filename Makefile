@@ -3,7 +3,7 @@ CC = g++
 FLAGS = -std=c++11 #-W -Wall -Wextra -Werror
 SFML = -I/usr/local/Cellar/sfml/2.5.1_1/include -L/usr/local/Cellar/sfml/2.5.1_1/lib -lsfml-graphics -lsfml-window -lsfml-system
 RM = rm -f
-SRCS =	main.cpp \
+SRCS =	srcs/main.cpp \
 # SRCS =	Color.cpp \
 # 		Point.cpp \
 # 		Plan.cpp \
