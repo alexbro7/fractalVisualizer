@@ -27,7 +27,7 @@ bool isDigit(const char& c) {return (c >= '0' && c <= '9') ? true : false;}
 bool isInteger(const char* s) {for (int i = 0; i < strlen(s); i++) if (!isDigit(s[i])) return false; return true;}
 
 void printMan() {
-    std::cout << RED << "|MANUEL:" << RESET << std::endl;
+    std::cout << RED << "|CONTROLS:" << RESET << std::endl;
     std::cout << RED << "| " RESET << "clic gauche = prend pour centre le pixel pointé et zoom *= 5" << std::endl;
     std::cout << RED << "| " RESET << "clic droit = zoom /= 5" << std::endl;
     std::cout << RED << "| " RESET << GREEN<<"Z" << RESET<<"/" << YELLOW << "X" RESET<<"= colors palett(" << GREEN<<"<" RESET<<"/" << YELLOW<<">" << RESET <<")" << std::endl;
