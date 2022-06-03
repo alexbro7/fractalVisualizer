@@ -18,6 +18,17 @@ double zoom = 1.0;
 double min_re = -2.5, max_re = 1;
 double min_im = -1, max_im = 1;
 
+const std::string manuel() {
+    std::string r(WHITE"CONTROL MANUAL:\n");
+    r += WHITE"clic gauche:\t";r+=GRAY"move origin position to clic point & zoom x5\n";
+    r += WHITE"clic droit:\t";r+=GRAY"zoom x0.2\n";
+    r += BLUE"Q";r+=WHITE"/";r+=RED"E";  r+=WHITE":\t\t";r+=GRAY"zoom x";r+=BLUE"0.5";r+=WHITE"/";r+=RED"2\n";
+    r += BLUE"F";r+= WHITE"/";r+= RED"R";r+=WHITE":\t\t";r+= GRAY"iteration(";r+=BLUE"-";r+=GRAY"/";r+=RED"+";r+=GRAY;r+=")\n";
+    r +=GREEN"Z";r+=GRAY"/";r+=YELLOW"X";r+=WHITE":\t\t";r+=GRAY"colors palett(";r+=GREEN"<";r+=GRAY"/";r+=YELLOW">";r+=GRAY")\n";
+    r +=GREEN"A";r+=GRAY"/";r+=YELLOW"D";r+=WHITE"/";r+=RED"W";r+=GRAY"/";r+=BLUE"S";r+=WHITE":\t";r+=GRAY"move(";r+=GREEN"<";r+=GRAY"/";r+=YELLOW">";r+=GRAY"/";r+=RED"^";r+=GRAY"/";r+=BLUE"v";r+=GRAY")\n";
+    return r;
+}
+
 bool error_msg(const std::string& s) {std::cerr << s << std::endl; return false;}
 
 bool isBlank(const char& c) {return (c == ' ' || c == '\n' || c == '\t' || c == '\v' || c == '\f' || c == '\r') ? true : false;}
@@ -50,17 +61,6 @@ void printColors(std::map<const std::string, std::vector<sf::Color> >colors){
 }
 
 sf::Color linear_interpolation(const sf::Color& v, const sf::Color& u, double a) {auto const b = 1 - a; return sf::Color(b*v.r + a * u.r, b * v.g + a * u.g, b * v.b + a * u.b);}
-
-const std::string manuel() {
-    std::string r(WHITE"CONTROL MANUAL:\n");
-    r += WHITE"clic gauche:\t";r+= GRAY"move origin position to clic point & zoom x5\n";
-    r += WHITE"clic droit:\t";r+= GRAY"zoom x0.2\n";
-    r += BLUE"Q";r+= WHITE"/";r+= RED"E";r+= WHITE":\t";r+= GRAY"zoom x"BLUE"0.5"WHITE"/"RED"2\n";
-    // r << RED"| " << BLUE"F" WHITE"/" RED"R" << GRAY" = iteration(" << BLUE"-" << GRAY<<"/" << RED << "+" << GRAY<<")" << std::endl;
-    // r << RED "| " << GREEN <<"Z" << GRAY<<"/" << YELLOW << "X" GRAY<<" = colors palett(" << GREEN<<"<" GRAY<<"/" << YELLOW<<">" << GRAY <<")" << std::endl;
-    // r << RED "| " << GREEN<<"A" << GRAY<<"/" << YELLOW<<"D" << GRAY"/" << RED<<"W" << GRAY<<"/" << BLUE<<"S" << GRAY<<" = move("<< GREEN<<"<" << GRAY<<"/" << YELLOW<<">" << GRAY<<"/" << RED<<"^" GRAY<<"/" << BLUE<<"v" << GRAY<<")" << std::endl;
-    return r;
-}
 
 std::map<const std::string, std::vector<sf::Color> > loadColors() {
     std::map<const std::string, std::vector<sf::Color> >  colors;
@@ -189,6 +189,7 @@ int main(int ac, char **av){
                     if (e.key.code == sf::Keyboard::Q) {zoom_x(1.0 / 2); zoom /= 2;}
                     if (e.key.code == sf::Keyboard::E) {zoom_x(2); ; zoom *= 2;}
                 }
+                if (e.key.code == sf::Keyboard::M) std::cout << manuel() << std::endl;
                 if (e.key.code == sf::Keyboard::C) std::cout << vecClrToStr(colorPalett->first, colorPalett->second) << std::endl;
                 if (e.key.code == sf::Keyboard::Z && colors.size() > 1) {
                     if (colorPalett == colors.begin()) 
