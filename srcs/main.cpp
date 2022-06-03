@@ -28,22 +28,20 @@ bool isInteger(const char* s) {for (int i = 0; i < strlen(s); i++) if (!isDigit(
 
 void printMan() {
     std::cout << RED << "|MANUEL:" << RESET << std::endl;
-    std::cout << RED << "| " RESET << "clic gauche = prend pour centre le pixel pointé et zoom *= 5" << std::endl;
-    std::cout << RED << "| " RESET << "clic droit = zoom /= 5" << std::endl;
-    std::cout << RED << "| " RESET << GREEN<<"Z" << RESET<<"/" << YELLOW << "X" RESET<<"= colors palett(" << GREEN<<"<" RESET<<"/" << YELLOW<<">" << RESET <<")" << std::endl;
-    std::cout << RED << "| " RESET << BLUE<<"Q" << RESET << "/" << RED<<"E" << RESET<<" = zoom(" << BLUE<<"-" << RESET<<"/" << RED << "+" << RESET << ")" << std::endl;
-    std::cout << RED << "| " RESET << BLUE<<"F" RESET<<"/" RED<<"R" << RESET<<"  = iteration(" << BLUE<<"-" << RESET<<"/" << RED << "+" << RESET<<")" << std::endl;
-    std::cout << RED << "| " RESET << GREEN<<"A" << RESET<<"/" << YELLOW<<"D" << RESET"/" << RED<<"W" << RESET<<"/" << BLUE<<"S" << RESET<<" = move("<< GREEN<<"<" << RESET<<"/" << YELLOW<<">" << RESET<<"/" << RED<<"^" RESET<<"/" << BLUE<<"v" << RESET<<")" << std::endl;
+    std::cout << RED << "|" RESET << "clic gauche = prend pour centre le pixel pointé et zoom *= 5" << std::endl;
+    std::cout << RED << "|" RESET << "clic droit = zoom /= 5" << std::endl;
+    std::cout << RED << "|" RESET << GREEN<<"Z" << RESET<<"/" << YELLOW << "X" RESET<<"= colors palett(" << GREEN<<"<" RESET<<"/" << YELLOW<<">" << RESET <<")" << std::endl;
+    std::cout << RED << "|" RESET << BLUE<<"Q" << RESET << "/" << RED<<"E" << RESET<<" = zoom(" << BLUE<<"-" << RESET<<"/" << RED << "+" << RESET << ")" << std::endl;
+    std::cout << RED << "|" RESET << BLUE<<"F" RESET<<"/" RED<<"R" << RESET<<"  = iteration(" << BLUE<<"-" << RESET<<"/" << RED << "+" << RESET<<")" << std::endl;
+    std::cout << RED << "|" RESET << GREEN<<"A" << RESET<<"/" << YELLOW<<"D" << RESET"/" << RED<<"W" << RESET<<"/" << BLUE<<"S" << RESET<<" = move("<< GREEN<<"<" << RESET<<"/" << YELLOW<<">" << RESET<<"/" << RED<<"^" RESET<<"/" << BLUE<<"v" << RESET<<")" << std::endl;
 }
 
 void printColors(std::map<const std::string, std::vector<sf::Color> >colors){
     std::cout << YELLOW << "|COLOR PALETTS:" << RESET << std::endl;
     for (std::map<const std::string, std::vector<sf::Color> >::const_iterator it = colors.begin(); it != colors.end(); it++){
-    std::map<const std::string, std::vector<sf::Color> >::const_iterator ite = colors.end(); ite--;
-        std::cout << YELLOW << "| " << WHITE << it->first << ":" << RESET << std::endl;
+        std::cout << YELLOW << "|" << WHITE << it->first << ":" << RESET << std::endl;
         for (std::vector<sf::Color>::const_iterator it2 = it->second.begin(); it2 != it->second.end(); it2++)
-            std::cout << YELLOW << "|  " << RED << (int)it2->r << RESET << "," << GREEN << (int)it2->g << RESET << "," << BLUE << (int)it2->b << RESET << std::endl;
-        if (it != ite) std::cout << YELLOW << "|" << RESET << std::endl;
+            std::cout << YELLOW << "| " << RED << (int)it2->r << RESET << "," << GREEN << (int)it2->g << RESET << "," << BLUE << (int)it2->b << RESET << std::endl;
     }
 }
 
