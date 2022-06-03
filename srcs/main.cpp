@@ -30,10 +30,11 @@ void printMan() {
     std:: cout << WHITE << "MANUEL:" << RESET << std::endl;
     std::cout << "clic gauche = prend pour centre le pixel pointé et zoom *= 5" << std::endl;
     std::cout << "clic droit = zoom /= 5" << std::endl;
-    std::cout << GREEN<<"A" << RESET<<"/" << YELLOW<<"D" << RESET"/" << RED<<"W" << RESET<<"/" << BLUE<<"S" << RESET<<" = move("<< GREEN<<"<" << RESET<<"/" << YELLOW<<">" << RESET<<"/" << RED<<"^" RESET<<"/" << BLUE<<"v" << RESET<<")" << std::endl;
+    std::cout << GREEN<<"Z" << RESET<<"/" << YELLOW << "X" RESET<<"= colors palett(" << GREEN<<"<" RESET<<"/" << YELLOW<<">" << RESET <<")" << std::endl;
     std::cout << BLUE<<"Q" << RESET << "/" << RED<<"E" << RESET<<" = zoom(" << BLUE<<"-" << RESET<<"/" << RED << "+" << RESET << ")" << std::endl;
     std::cout << BLUE<<"F" RESET<<"/" RED<<"R" << RESET<<"  = iteration(" << BLUE<<"-" << RESET<<"/" << RED << "+" << RESET<<")" << std::endl;
-    std::cout << GREEN<<"Z" << RESET<<"/" << YELLOW << "X" RESET<<"= colors palett(" << GREEN<<"<" RESET<<"/" << YELLOW<<">" << RESET <<")" << std::endl << std::endl;
+    std::cout << GREEN<<"A" << RESET<<"/" << YELLOW<<"D" << RESET"/" << RED<<"W" << RESET<<"/" << BLUE<<"S" << RESET<<" = move("<< GREEN<<"<" << RESET<<"/" << YELLOW<<">" << RESET<<"/" << RED<<"^" RESET<<"/" << BLUE<<"v" << RESET<<")" << std::endl;
+    std::cout << std::endl;
 }
 
 sf::Color linear_interpolation(const sf::Color& v, const sf::Color& u, double a){
