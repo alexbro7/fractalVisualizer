@@ -11,7 +11,7 @@
 #define WHITE   "\033[1;37m"
 #define YELLOW  "\033[1;33m"
 #define BLUE    "\033[1;34m"
-#define RESET   "\033[0m"
+#define GRAY   "\033[0m"
 
 int max_iter = 128;
 double zoom = 1.0;
@@ -26,22 +26,24 @@ bool isDigit(const char& c) {return (c >= '0' && c <= '9') ? true : false;}
 
 bool isInteger(const char* s) {for (int i = 0; i < strlen(s); i++) if (!isDigit(s[i])) return false; return true;}
 
-void printMan() {
-    std::cout << RED << "|CONTROLS:" << RESET << std::endl;
-    std::cout << RED << "| " RESET << "clic gauche = prend pour centre le pixel pointé et zoom *= 5" << std::endl;
-    std::cout << RED << "| " RESET << "clic droit = zoom /= 5" << std::endl;
-    std::cout << RED << "| " RESET << GREEN<<"Z" << RESET<<"/" << YELLOW << "X" RESET<<" = colors palett(" << GREEN<<"<" RESET<<"/" << YELLOW<<">" << RESET <<")" << std::endl;
-    std::cout << RED << "| " RESET << BLUE<<"Q" << RESET << "/" << RED<<"E" << RESET<<" = zoom(" << BLUE<<"-" << RESET<<"/" << RED << "+" << RESET << ")" << std::endl;
-    std::cout << RED << "| " RESET << BLUE<<"F" RESET<<"/" RED<<"R" << RESET<<" = iteration(" << BLUE<<"-" << RESET<<"/" << RED << "+" << RESET<<")" << std::endl;
-    std::cout << RED << "| " RESET << GREEN<<"A" << RESET<<"/" << YELLOW<<"D" << RESET"/" << RED<<"W" << RESET<<"/" << BLUE<<"S" << RESET<<" = move("<< GREEN<<"<" << RESET<<"/" << YELLOW<<">" << RESET<<"/" << RED<<"^" RESET<<"/" << BLUE<<"v" << RESET<<")" << std::endl;
-}
+// const std::string manuel() {
+//     std::string r;
+//     r << RED"|CONTROLS:"; r << std::endl;
+//     r << RED"| "; << WHITE"clic gauche:\t" << GRAY"move origin position to clic point & zoom x5" << std::endl;
+//     r << RED"| " << WHITE"clic droit:\t" << GRAY"zoom x0.2" << std::endl;
+//     r << RED"| " << BLUE"Q" << WHITE"/" << RED"E" << WHITE":\t" << GRAY"zoom x" << BLUE"0.5" << WHITE"/" << RED"2" << std::endl;
+//     r << RED"| " << BLUE"F" WHITE"/" RED"R" << GRAY" = iteration(" << BLUE"-" << GRAY<<"/" << RED << "+" << GRAY<<")" << std::endl;
+//     r << RED "| " << GREEN <<"Z" << GRAY<<"/" << YELLOW << "X" GRAY<<" = colors palett(" << GREEN<<"<" GRAY<<"/" << YELLOW<<">" << GRAY <<")" << std::endl;
+//     r << RED "| " << GREEN<<"A" << GRAY<<"/" << YELLOW<<"D" << GRAY"/" << RED<<"W" << GRAY<<"/" << BLUE<<"S" << GRAY<<" = move("<< GREEN<<"<" << GRAY<<"/" << YELLOW<<">" << GRAY<<"/" << RED<<"^" GRAY<<"/" << BLUE<<"v" << GRAY<<")" << std::endl;
+//     return r;
+// }
 
 void printColors(std::map<const std::string, std::vector<sf::Color> >colors){
-    std::cout << YELLOW << "|COLOR PALETTS:" << RESET << std::endl;
+    std::cout << YELLOW << "|COLOR PALETTS:" << GRAY << std::endl;
     for (std::map<const std::string, std::vector<sf::Color> >::const_iterator it = colors.begin(); it != colors.end(); it++){
-        std::cout << YELLOW << "|" << WHITE << it->first << ":" << RESET << std::endl;
+        std::cout << YELLOW << "|" << WHITE << it->first << ":" << GRAY << std::endl;
         for (std::vector<sf::Color>::const_iterator it2 = it->second.begin(); it2 != it->second.end(); it2++)
-            std::cout << YELLOW << "| " << RED << (int)it2->r << RESET << "," << GREEN << (int)it2->g << RESET << "," << BLUE << (int)it2->b << RESET << std::endl;
+            std::cout << YELLOW << "| " << RED << (int)it2->r << GRAY << "," << GREEN << (int)it2->g << GRAY << "," << BLUE << (int)it2->b << GRAY << std::endl;
     }
 }
 
@@ -94,6 +96,25 @@ std::map<const std::string, std::vector<sf::Color> > loadColors() {
 }
 
 sf::Color calculMandelbrotPixel(std::vector<sf::Color> colors, int x, int y, int W, int H){
+        // double cr = min_re + (max_re - min_re) * x / W;
+        // double ci = min_im + (max_im - min_im) * y / H;
+        // double re = 0, im = 0;
+        // int iter;
+        // for (iter = 0; iter < max_iter; iter++){
+        //     double tr = re * re - im * im + cr;
+        //     im = 2 * re * im + ci;
+        //     re = tr;
+        //     if (re * re + im * im > 2 * 2) break;
+        // }
+        // static const auto max_color = colors.size() - 1;
+        // if (iter == max_iter) iter = 0;
+        // double mu = 1.0 * iter / max_iter;
+        // mu *= max_color;
+        // auto i_mu = static_cast<size_t>(mu);
+        // const sf::Color color1 = *(colors.begin() + i_mu);
+        // const sf::Color color2 = *(colors.begin() + std::min(i_mu + 1, max_color));
+        // return linear_interpolation(color1, color2, mu - i_mu);
+
         double cr = min_re + (max_re - min_re) * x / W;
         double ci = min_im + (max_im - min_im) * y / H;
         double re = 0, im = 0;
@@ -104,18 +125,51 @@ sf::Color calculMandelbrotPixel(std::vector<sf::Color> colors, int x, int y, int
             re = tr;
             if (re * re + im * im > 2 * 2) break;
         }
+        int r = 1.0 * (max_iter - iter) / max_iter * 0xff;
+        int g = r, b = r;
+
+
         static const auto max_color = colors.size() - 1;
         if (iter == max_iter) iter = 0;
         double mu = 1.0 * iter / max_iter;
+        //scale mu to be in the range of colors
         mu *= max_color;
         auto i_mu = static_cast<size_t>(mu);
-        const sf::Color color1 = *(colors.begin() + i_mu);
-        const sf::Color color2 = *(colors.begin() + std::min(i_mu + 1, max_color));
+        const sf::Color color1 = colors[i_mu];
+        const sf::Color color2 = colors[std::min(i_mu + 1, max_color)];
         return linear_interpolation(color1, color2, mu - i_mu);
+    
+
+}
+
+int integerLength(int i) {
+    if (!i)
+        return 1;
+    for (int r = 0; 1; r++) {
+        if (!i)
+            return r;
+        i /= 10;
+    }
+    return 0;
+}
+
+const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
+    std::string s(WHITE);
+    s += "color palett: ";
+    s += YELLOW + (n+"\n");
+    for (std::vector<sf::Color>::const_iterator it = v.begin(); it != v.end(); it++){
+        s += "              ";
+        s += (RED + std::to_string((int)it->r));
+        for (char a = 3; a > integerLength((int)it->r); a--) s += " ";
+        s += (GREEN + std::to_string((int)it->g));
+        for (char a = 3; a > integerLength((int)it->g); a--) s += " ";
+        s += (BLUE + std::to_string((int)it->b)) + "\n";
+    }
+    return s;
 }
 
 #define NB_THREADS 1
-void draw(sf::Image *image, std::vector<sf::Color> colors, const int& W, const int& H){
+void draw(sf::Image *image, std::string colorsName, std::vector<sf::Color> colors, const int& W, const int& H){
     int thread_id = 0, x, y;
     for (int i = 0; i < W * H; i++){
         if (thread_id == NB_THREADS) thread_id = 0;
@@ -138,11 +192,10 @@ int main(int ac, char **av){
     sf::Text text; text.setFont(font); text.setCharacterSize(24); text.setFillColor(sf::Color::Red);
     std::map<const std::string, std::vector<sf::Color> > colors = loadColors();
     if (colors.empty()) return 1;
-printColors(colors);
     std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalett = colors.begin();
     std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalettEnd = colors.end(); if (colors.size() > 1) colorPalettEnd--;
+    std::cout << vecClrToStr(colorPalett->first, colorPalett->second) << std::endl;
 
-    printMan();
     while (window.isOpen()){
         sf::Event e;
         while (window.pollEvent(e)){
@@ -205,7 +258,7 @@ printColors(colors);
             }
         }
         window.clear();
-        draw(&image, colorPalett->second, W, H);
+        draw(&image, colorPalett->first, colorPalett->second, W, H);
         texture.loadFromImage(image);
         sprite.setTexture(texture);
         window.draw(sprite);
