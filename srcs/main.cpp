@@ -154,16 +154,13 @@ int integerLength(int i) {
 }
 
 const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
-    std::string s(WHITE);
-    s += "color palett: ";
-    s += YELLOW + (n+"\n");
+    std::string s(YELLOW + n + "\n");
     for (std::vector<sf::Color>::const_iterator it = v.begin(); it != v.end(); it++){
-        s += "              ";
-        s += (RED + std::to_string((int)it->r));
-        for (char a = 3; a > integerLength((int)it->r); a--) s += " ";
-        s += (GREEN + std::to_string((int)it->g));
-        for (char a = 3; a > integerLength((int)it->g); a--) s += " ";
-        s += (BLUE + std::to_string((int)it->b)) + "\n";
+        s += " " + (RED + std::to_string((int)it->r));
+        for (char a = 3; a > integerLength((int)it->r); a--) s += " "; s += " ";
+        s += GREEN + std::to_string((int)it->g);
+        for (char a = 3; a > integerLength((int)it->g); a--) s += " "; s += " ";
+        s += BLUE + std::to_string((int)it->b) + "\n";
     }
     return s;
 }
