@@ -26,17 +26,19 @@ bool isDigit(const char& c) {return (c >= '0' && c <= '9') ? true : false;}
 
 bool isInteger(const char* s) {for (int i = 0; i < strlen(s); i++) if (!isDigit(s[i])) return false; return true;}
 
-// const std::string manuel() {
-//     std::string r;
-//     r << RED"|CONTROLS:"; r << std::endl;
-//     r << RED"| "; << WHITE"clic gauche:\t" << GRAY"move origin position to clic point & zoom x5" << std::endl;
-//     r << RED"| " << WHITE"clic droit:\t" << GRAY"zoom x0.2" << std::endl;
-//     r << RED"| " << BLUE"Q" << WHITE"/" << RED"E" << WHITE":\t" << GRAY"zoom x" << BLUE"0.5" << WHITE"/" << RED"2" << std::endl;
-//     r << RED"| " << BLUE"F" WHITE"/" RED"R" << GRAY" = iteration(" << BLUE"-" << GRAY<<"/" << RED << "+" << GRAY<<")" << std::endl;
-//     r << RED "| " << GREEN <<"Z" << GRAY<<"/" << YELLOW << "X" GRAY<<" = colors palett(" << GREEN<<"<" GRAY<<"/" << YELLOW<<">" << GRAY <<")" << std::endl;
-//     r << RED "| " << GREEN<<"A" << GRAY<<"/" << YELLOW<<"D" << GRAY"/" << RED<<"W" << GRAY<<"/" << BLUE<<"S" << GRAY<<" = move("<< GREEN<<"<" << GRAY<<"/" << YELLOW<<">" << GRAY<<"/" << RED<<"^" GRAY<<"/" << BLUE<<"v" << GRAY<<")" << std::endl;
-//     return r;
-// }
+int integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i) return r; else i /= 10;}}
+
+const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
+    std::string s(WHITE + n + ":\n");
+    for (std::vector<sf::Color>::const_iterator it = v.begin(); it != v.end(); it++){
+        s += " " + (RED + std::to_string((int)it->r));
+        for (char a = 3; a > integerLength((int)it->r); a--) s += " "; s += " ";
+        s += GREEN + std::to_string((int)it->g);
+        for (char a = 3; a > integerLength((int)it->g); a--) s += " "; s += " ";
+        s += BLUE + std::to_string((int)it->b) + "\n";
+    }
+    return s;
+}
 
 void printColors(std::map<const std::string, std::vector<sf::Color> >colors){
     std::cout << YELLOW << "|COLOR PALETTS:" << GRAY << std::endl;
@@ -47,9 +49,17 @@ void printColors(std::map<const std::string, std::vector<sf::Color> >colors){
     }
 }
 
-sf::Color linear_interpolation(const sf::Color& v, const sf::Color& u, double a){
-    auto const b = 1 - a;
-    return sf::Color(b*v.r + a * u.r, b * v.g + a * u.g, b * v.b + a * u.b);
+sf::Color linear_interpolation(const sf::Color& v, const sf::Color& u, double a) {auto const b = 1 - a; return sf::Color(b*v.r + a * u.r, b * v.g + a * u.g, b * v.b + a * u.b);}
+
+const std::string manuel() {
+    std::string r(WHITE"CONTROL MANUAL:\n");
+    r += WHITE"clic gauche:\t";r+= GRAY"move origin position to clic point & zoom x5\n";
+    r += WHITE"clic droit:\t";r+= GRAY"zoom x0.2\n";
+    r += BLUE"Q";r+= WHITE"/";r+= RED"E";r+= WHITE":\t";r+= GRAY"zoom x"BLUE"0.5"WHITE"/"RED"2\n";
+    // r << RED"| " << BLUE"F" WHITE"/" RED"R" << GRAY" = iteration(" << BLUE"-" << GRAY<<"/" << RED << "+" << GRAY<<")" << std::endl;
+    // r << RED "| " << GREEN <<"Z" << GRAY<<"/" << YELLOW << "X" GRAY<<" = colors palett(" << GREEN<<"<" GRAY<<"/" << YELLOW<<">" << GRAY <<")" << std::endl;
+    // r << RED "| " << GREEN<<"A" << GRAY<<"/" << YELLOW<<"D" << GRAY"/" << RED<<"W" << GRAY<<"/" << BLUE<<"S" << GRAY<<" = move("<< GREEN<<"<" << GRAY<<"/" << YELLOW<<">" << GRAY<<"/" << RED<<"^" GRAY<<"/" << BLUE<<"v" << GRAY<<")" << std::endl;
+    return r;
 }
 
 std::map<const std::string, std::vector<sf::Color> > loadColors() {
@@ -96,25 +106,6 @@ std::map<const std::string, std::vector<sf::Color> > loadColors() {
 }
 
 sf::Color calculMandelbrotPixel(std::vector<sf::Color> colors, int x, int y, int W, int H){
-        // double cr = min_re + (max_re - min_re) * x / W;
-        // double ci = min_im + (max_im - min_im) * y / H;
-        // double re = 0, im = 0;
-        // int iter;
-        // for (iter = 0; iter < max_iter; iter++){
-        //     double tr = re * re - im * im + cr;
-        //     im = 2 * re * im + ci;
-        //     re = tr;
-        //     if (re * re + im * im > 2 * 2) break;
-        // }
-        // static const auto max_color = colors.size() - 1;
-        // if (iter == max_iter) iter = 0;
-        // double mu = 1.0 * iter / max_iter;
-        // mu *= max_color;
-        // auto i_mu = static_cast<size_t>(mu);
-        // const sf::Color color1 = *(colors.begin() + i_mu);
-        // const sf::Color color2 = *(colors.begin() + std::min(i_mu + 1, max_color));
-        // return linear_interpolation(color1, color2, mu - i_mu);
-
         double cr = min_re + (max_re - min_re) * x / W;
         double ci = min_im + (max_im - min_im) * y / H;
         double re = 0, im = 0;
@@ -138,31 +129,6 @@ sf::Color calculMandelbrotPixel(std::vector<sf::Color> colors, int x, int y, int
         const sf::Color color1 = colors[i_mu];
         const sf::Color color2 = colors[std::min(i_mu + 1, max_color)];
         return linear_interpolation(color1, color2, mu - i_mu);
-    
-
-}
-
-int integerLength(int i) {
-    if (!i)
-        return 1;
-    for (int r = 0; 1; r++) {
-        if (!i)
-            return r;
-        i /= 10;
-    }
-    return 0;
-}
-
-const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
-    std::string s(YELLOW + n + "\n");
-    for (std::vector<sf::Color>::const_iterator it = v.begin(); it != v.end(); it++){
-        s += " " + (RED + std::to_string((int)it->r));
-        for (char a = 3; a > integerLength((int)it->r); a--) s += " "; s += " ";
-        s += GREEN + std::to_string((int)it->g);
-        for (char a = 3; a > integerLength((int)it->g); a--) s += " "; s += " ";
-        s += BLUE + std::to_string((int)it->b) + "\n";
-    }
-    return s;
 }
 
 #define NB_THREADS 1
@@ -191,8 +157,9 @@ int main(int ac, char **av){
     if (colors.empty()) return 1;
     std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalett = colors.begin();
     std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalettEnd = colors.end(); if (colors.size() > 1) colorPalettEnd--;
-    std::cout << vecClrToStr(colorPalett->first, colorPalett->second) << std::endl;
 
+    std::cout << "Press key C for display color palett." << std::endl;
+    std::cout << "Press key M for display control manuel." << std::endl;
     while (window.isOpen()){
         sf::Event e;
         while (window.pollEvent(e)){
@@ -222,6 +189,7 @@ int main(int ac, char **av){
                     if (e.key.code == sf::Keyboard::Q) {zoom_x(1.0 / 2); zoom /= 2;}
                     if (e.key.code == sf::Keyboard::E) {zoom_x(2); ; zoom *= 2;}
                 }
+                if (e.key.code == sf::Keyboard::C) std::cout << vecClrToStr(colorPalett->first, colorPalett->second) << std::endl;
                 if (e.key.code == sf::Keyboard::Z && colors.size() > 1) {
                     if (colorPalett == colors.begin()) 
                         colorPalett = colorPalettEnd; 
