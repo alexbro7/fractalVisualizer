@@ -30,9 +30,9 @@ void printMan() {
     std::cout << RED << "|CONTROLS:" << RESET << std::endl;
     std::cout << RED << "| " RESET << "clic gauche = prend pour centre le pixel pointé et zoom *= 5" << std::endl;
     std::cout << RED << "| " RESET << "clic droit = zoom /= 5" << std::endl;
-    std::cout << RED << "| " RESET << GREEN<<"Z" << RESET<<"/" << YELLOW << "X" RESET<<"= colors palett(" << GREEN<<"<" RESET<<"/" << YELLOW<<">" << RESET <<")" << std::endl;
+    std::cout << RED << "| " RESET << GREEN<<"Z" << RESET<<"/" << YELLOW << "X" RESET<<" = colors palett(" << GREEN<<"<" RESET<<"/" << YELLOW<<">" << RESET <<")" << std::endl;
     std::cout << RED << "| " RESET << BLUE<<"Q" << RESET << "/" << RED<<"E" << RESET<<" = zoom(" << BLUE<<"-" << RESET<<"/" << RED << "+" << RESET << ")" << std::endl;
-    std::cout << RED << "| " RESET << BLUE<<"F" RESET<<"/" RED<<"R" << RESET<<"  = iteration(" << BLUE<<"-" << RESET<<"/" << RED << "+" << RESET<<")" << std::endl;
+    std::cout << RED << "| " RESET << BLUE<<"F" RESET<<"/" RED<<"R" << RESET<<" = iteration(" << BLUE<<"-" << RESET<<"/" << RED << "+" << RESET<<")" << std::endl;
     std::cout << RED << "| " RESET << GREEN<<"A" << RESET<<"/" << YELLOW<<"D" << RESET"/" << RED<<"W" << RESET<<"/" << BLUE<<"S" << RESET<<" = move("<< GREEN<<"<" << RESET<<"/" << YELLOW<<">" << RESET<<"/" << RED<<"^" RESET<<"/" << BLUE<<"v" << RESET<<")" << std::endl;
 }
 
