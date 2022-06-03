@@ -6,12 +6,17 @@
 #include <cstring>
 #include <SFML/Graphics.hpp>
 
+#define RED     "\033[1;31m"
+#define GREEN   "\033[1;32m"
+#define WHITE   "\033[1;37m"
+#define YELLOW  "\033[1;33m"
+#define BLUE    "\033[1;34m"
+#define RESET   "\033[0m"
+
 int max_iter = 128;
 double zoom = 1.0;
 double min_re = -2.5, max_re = 1;
 double min_im = -1, max_im = 1;
-const std::string man("A/D/W/S = move(</>/^/v)\nQ/E = zoom(-/+)\nF/R = iteration(-/+)\nZ/X = colors palett(</>)");
-
 
 bool error_msg(const std::string& s) {std::cerr << s << std::endl; return false;}
 
@@ -20,6 +25,16 @@ bool isBlank(const char& c) {return (c == ' ' || c == '\n' || c == '\t' || c == 
 bool isDigit(const char& c) {return (c >= '0' && c <= '9') ? true : false;}
 
 bool isInteger(const char* s) {for (int i = 0; i < strlen(s); i++) if (!isDigit(s[i])) return false; return true;}
+
+void printMan() {
+    std:: cout << WHITE << "MANUEL:" << RESET << std::endl;
+    std::cout << "clic gauche = prend pour centre le pixel pointé et zoom *= 5" << std::endl;
+    std::cout << "clic droit = zoom /= 5" << std::endl;
+    std::cout << GREEN<<"A" << RESET<<"/" << YELLOW<<"D" << RESET"/" << RED<<"W" << RESET<<"/" << BLUE<<"S" << RESET<<" = move("<< GREEN<<"<" << RESET<<"/" << YELLOW<<">" << RESET<<"/" << RED<<"^" RESET<<"/" << BLUE<<"v" << RESET<<")" << std::endl;
+    std::cout << BLUE<<"Q" << RESET << "/" << RED<<"E" << RESET<<" = zoom(" << BLUE<<"-" << RESET<<"/" << RED << "+" << RESET << ")" << std::endl;
+    std::cout << BLUE<<"F" RESET<<"/" RED<<"R" << RESET<<"  = iteration(" << BLUE<<"-" << RESET<<"/" << RED << "+" << RESET<<")" << std::endl;
+    std::cout << GREEN<<"Z" << RESET<<"/" << YELLOW << "X" RESET<<"= colors palett(" << GREEN<<"<" RESET<<"/" << YELLOW<<">" << RESET <<")" << std::endl << std::endl;
+}
 
 sf::Color linear_interpolation(const sf::Color& v, const sf::Color& u, double a){
     auto const b = 1 - a;
@@ -49,7 +64,6 @@ std::map<const std::string, std::vector<sf::Color> > loadColors() {
         if (i) i -= 1;
         if (isDigit(fileContent[i]) == true && fileContent[i] != ';') {std::cerr << "Error: colorPalett:0 c:" << i << "." << fileContent[i] << std::endl; colors.clear(); return colors;}
         if (fileContent[i] == ';') return colors;
-std::cout << "**" << fileContent << "[" << i << "]" << fileContent[i] << "*" << std::endl;
         for (;!isDigit(fileContent[i]); i++) {nTmp += fileContent[i]; if (i == fileContent.length()){std::cerr << "Error: colorPalett:1 c:" << i << "." << std::endl; colors.clear(); return colors;}}
         if (nTmp.empty()) {std::cerr << "Error: colorPalett:2 c:" << i << "." << std::endl; colors.clear(); return colors;}
         for (int rTmp = 0, gTmp = 0, bTmp = 0, iTmp = 0;i < fileContent.length() && isDigit(fileContent[i]); i++) {
@@ -115,15 +129,17 @@ int main(int ac, char **av){
     sf::Text text; text.setFont(font); text.setCharacterSize(24); text.setFillColor(sf::Color::Red);
     std::map<const std::string, std::vector<sf::Color> > colors = loadColors();
     if (colors.empty()) return 1;
+std::cout << WHITE << "COLOR PALETTS:" << RESET << std::endl;
 for (std::map<const std::string, std::vector<sf::Color> >::const_iterator it = colors.begin(); it != colors.end(); it++){
-    std::cout << it->first << ":"<< std::endl;
+    std::cout << WHITE << it->first << ":" << RESET << std::endl;
     for (std::vector<sf::Color>::const_iterator it2 = it->second.begin(); it2 != it->second.end(); it2++)
-        std::cout << (int)it2->r << "," << (int)it2->g << "," << (int)it2->b << std::endl;
+        std::cout << RED << (int)it2->r << RESET << "," << GREEN << (int)it2->g << RESET << "," << BLUE << (int)it2->b << RESET << std::endl;
+    std::cout << std::endl;
 }
     std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalett = colors.begin();
     std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalettEnd = colors.end(); if (colors.size() > 1) colorPalettEnd--;
 
-    std::cout << man << std::endl;
+    printMan();
     while (window.isOpen()){
         sf::Event e;
         while (window.pollEvent(e)){
