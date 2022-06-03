@@ -1,1 +1,1 @@
-clear && make re && ./fractalVisualizer
+clear && make re && ./fractalVisualizer 1280
