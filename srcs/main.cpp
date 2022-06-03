@@ -20,12 +20,12 @@ double min_im = -1, max_im = 1;
 
 const std::string manuel() {
     std::string r(WHITE"CONTROL MANUAL:\n");
-    r += WHITE"clic gauche:\t";r+=GRAY"move origin position to clic point & zoom x5\n";
-    r += WHITE"clic droit:\t";r+=GRAY"zoom x0.2\n";
-    r += BLUE"Q";r+=WHITE"/";r+=RED"E";  r+=WHITE":\t\t";r+=GRAY"zoom x";r+=BLUE"0.5";r+=WHITE"/";r+=RED"2\n";
-    r += BLUE"F";r+= WHITE"/";r+= RED"R";r+=WHITE":\t\t";r+= GRAY"iteration(";r+=BLUE"-";r+=GRAY"/";r+=RED"+";r+=GRAY;r+=")\n";
-    r +=GREEN"Z";r+=GRAY"/";r+=YELLOW"X";r+=WHITE":\t\t";r+=GRAY"colors palett(";r+=GREEN"<";r+=GRAY"/";r+=YELLOW">";r+=GRAY")\n";
-    r +=GREEN"A";r+=GRAY"/";r+=YELLOW"D";r+=WHITE"/";r+=RED"W";r+=GRAY"/";r+=BLUE"S";r+=WHITE":\t";r+=GRAY"move(";r+=GREEN"<";r+=GRAY"/";r+=YELLOW">";r+=GRAY"/";r+=RED"^";r+=GRAY"/";r+=BLUE"v";r+=GRAY")\n";
+    r+=WHITE"clic gauche:\t";r+=GRAY"origin window = origin clic\n\t\tzoom x 5\n";
+    r+=WHITE"clic droit:\t";r+=GRAY"zoom x 0.2\n";
+    r+=RED"E";r+=WHITE"/";r+=BLUE"Q";  r+=WHITE":\t\t";r+=GRAY"zoom x ";r+=RED"2";r+=WHITE"/";r+=BLUE"0.5\n";
+    r+= RED"R";r+= WHITE"/";r+=BLUE"F";r+=WHITE":\t\t";r+= GRAY"iteration ";r+=RED"+";r+=GRAY"/";r+=BLUE"-";r+=GRAY;r+=" 1\n";
+    r+=GREEN"A";r+=GRAY"/";r+=YELLOW"D";r+=WHITE"/";r+=RED"W";r+=GRAY"/";r+=BLUE"S";r+=WHITE":\t";r+=GRAY"origin point ";r+=GREEN"←";r+=GRAY"/";r+=YELLOW"→";r+=GRAY"/";r+=RED"↑";r+=GRAY"/";r+=BLUE"↓";r+=GRAY")\n";
+    r+=GREEN"Z";r+=GRAY"/";r+=YELLOW"X";r+=WHITE":\t\t";r+=GRAY"colors palett = ";r+=GREEN"previous";r+=GRAY"/";r+=YELLOW"next";r+=GRAY"\n";
     return r;
 }
 
