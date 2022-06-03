@@ -27,14 +27,24 @@ bool isDigit(const char& c) {return (c >= '0' && c <= '9') ? true : false;}
 bool isInteger(const char* s) {for (int i = 0; i < strlen(s); i++) if (!isDigit(s[i])) return false; return true;}
 
 void printMan() {
-    std:: cout << WHITE << "MANUEL:" << RESET << std::endl;
-    std::cout << "clic gauche = prend pour centre le pixel pointé et zoom *= 5" << std::endl;
-    std::cout << "clic droit = zoom /= 5" << std::endl;
-    std::cout << GREEN<<"Z" << RESET<<"/" << YELLOW << "X" RESET<<"= colors palett(" << GREEN<<"<" RESET<<"/" << YELLOW<<">" << RESET <<")" << std::endl;
-    std::cout << BLUE<<"Q" << RESET << "/" << RED<<"E" << RESET<<" = zoom(" << BLUE<<"-" << RESET<<"/" << RED << "+" << RESET << ")" << std::endl;
-    std::cout << BLUE<<"F" RESET<<"/" RED<<"R" << RESET<<"  = iteration(" << BLUE<<"-" << RESET<<"/" << RED << "+" << RESET<<")" << std::endl;
-    std::cout << GREEN<<"A" << RESET<<"/" << YELLOW<<"D" << RESET"/" << RED<<"W" << RESET<<"/" << BLUE<<"S" << RESET<<" = move("<< GREEN<<"<" << RESET<<"/" << YELLOW<<">" << RESET<<"/" << RED<<"^" RESET<<"/" << BLUE<<"v" << RESET<<")" << std::endl;
-    std::cout << std::endl;
+    std::cout << RED << "|MANUEL:" << RESET << std::endl;
+    std::cout << RED << "| " RESET << "clic gauche = prend pour centre le pixel pointé et zoom *= 5" << std::endl;
+    std::cout << RED << "| " RESET << "clic droit = zoom /= 5" << std::endl;
+    std::cout << RED << "| " RESET << GREEN<<"Z" << RESET<<"/" << YELLOW << "X" RESET<<"= colors palett(" << GREEN<<"<" RESET<<"/" << YELLOW<<">" << RESET <<")" << std::endl;
+    std::cout << RED << "| " RESET << BLUE<<"Q" << RESET << "/" << RED<<"E" << RESET<<" = zoom(" << BLUE<<"-" << RESET<<"/" << RED << "+" << RESET << ")" << std::endl;
+    std::cout << RED << "| " RESET << BLUE<<"F" RESET<<"/" RED<<"R" << RESET<<"  = iteration(" << BLUE<<"-" << RESET<<"/" << RED << "+" << RESET<<")" << std::endl;
+    std::cout << RED << "| " RESET << GREEN<<"A" << RESET<<"/" << YELLOW<<"D" << RESET"/" << RED<<"W" << RESET<<"/" << BLUE<<"S" << RESET<<" = move("<< GREEN<<"<" << RESET<<"/" << YELLOW<<">" << RESET<<"/" << RED<<"^" RESET<<"/" << BLUE<<"v" << RESET<<")" << std::endl;
+}
+
+void printColors(std::map<const std::string, std::vector<sf::Color> >colors){
+    std::cout << YELLOW << "|COLOR PALETTS:" << RESET << std::endl;
+    for (std::map<const std::string, std::vector<sf::Color> >::const_iterator it = colors.begin(); it != colors.end(); it++){
+    std::map<const std::string, std::vector<sf::Color> >::const_iterator ite = colors.end(); ite--;
+        std::cout << YELLOW << "| " << WHITE << it->first << ":" << RESET << std::endl;
+        for (std::vector<sf::Color>::const_iterator it2 = it->second.begin(); it2 != it->second.end(); it2++)
+            std::cout << YELLOW << "|  " << RED << (int)it2->r << RESET << "," << GREEN << (int)it2->g << RESET << "," << BLUE << (int)it2->b << RESET << std::endl;
+        if (it != ite) std::cout << YELLOW << "|" << RESET << std::endl;
+    }
 }
 
 sf::Color linear_interpolation(const sf::Color& v, const sf::Color& u, double a){
@@ -107,7 +117,7 @@ sf::Color calculMandelbrotPixel(std::vector<sf::Color> colors, int x, int y, int
 }
 
 #define NB_THREADS 1
-void drawMandelbrot(sf::Image *image, std::vector<sf::Color> colors, const int& W, const int& H){
+void draw(sf::Image *image, std::vector<sf::Color> colors, const int& W, const int& H){
     int thread_id = 0, x, y;
     for (int i = 0; i < W * H; i++){
         if (thread_id == NB_THREADS) thread_id = 0;
@@ -130,13 +140,7 @@ int main(int ac, char **av){
     sf::Text text; text.setFont(font); text.setCharacterSize(24); text.setFillColor(sf::Color::Red);
     std::map<const std::string, std::vector<sf::Color> > colors = loadColors();
     if (colors.empty()) return 1;
-std::cout << WHITE << "COLOR PALETTS:" << RESET << std::endl;
-for (std::map<const std::string, std::vector<sf::Color> >::const_iterator it = colors.begin(); it != colors.end(); it++){
-    std::cout << WHITE << it->first << ":" << RESET << std::endl;
-    for (std::vector<sf::Color>::const_iterator it2 = it->second.begin(); it2 != it->second.end(); it2++)
-        std::cout << RED << (int)it2->r << RESET << "," << GREEN << (int)it2->g << RESET << "," << BLUE << (int)it2->b << RESET << std::endl;
-    std::cout << std::endl;
-}
+printColors(colors);
     std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalett = colors.begin();
     std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalettEnd = colors.end(); if (colors.size() > 1) colorPalettEnd--;
 
@@ -203,7 +207,7 @@ for (std::map<const std::string, std::vector<sf::Color> >::const_iterator it = c
             }
         }
         window.clear();
-        drawMandelbrot(&image, colorPalett->second, W, H);
+        draw(&image, colorPalett->second, W, H);
         texture.loadFromImage(image);
         sprite.setTexture(texture);
         window.draw(sprite);
