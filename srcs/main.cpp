@@ -5,12 +5,20 @@
 #include <map>
 #include <cstring>
 #include <SFML/Graphics.hpp>
+#include <thread>
 
 #define RED     "\033[1;31m"
 #define GREEN   "\033[1;32m"
 #define WHITE   "\033[1;37m"
 #define YELLOW  "\033[1;33m"
 #define BLUE    "\033[1;34m"
+
+// #define MAGENTA    "\033[1;35m"
+// #define BLUE1    "\033[1;36m"
+// #define REDW    "\033[1;41m"
+// #define REDW    "\033[1;42m"
+// #define REDW    "\033[1;43m"
+// #define REDW    "\033[1;44m"
 #define GRAY   "\033[0m"
 
 int max_iter = 128;
@@ -19,13 +27,19 @@ double min_re = -2.5, max_re = 1;
 double min_im = -1, max_im = 1;
 
 const std::string manuel() {
-    std::string r(WHITE"CONTROL MANUAL:\n");
-    r+=WHITE"clic gauche:\t";r+=GRAY"origin window = origin clic\n\t\tzoom x 5\n";
-    r+=WHITE"clic droit:\t";r+=GRAY"zoom x 0.2\n";
-    r+=RED"E";r+=WHITE"/";r+=BLUE"Q";  r+=WHITE":\t\t";r+=GRAY"zoom x ";r+=RED"2";r+=WHITE"/";r+=BLUE"0.5\n";
-    r+= RED"R";r+= WHITE"/";r+=BLUE"F";r+=WHITE":\t\t";r+= GRAY"iteration ";r+=RED"+";r+=GRAY"/";r+=BLUE"-";r+=GRAY;r+=" 1\n";
-    r+=GREEN"A";r+=GRAY"/";r+=YELLOW"D";r+=WHITE"/";r+=RED"W";r+=GRAY"/";r+=BLUE"S";r+=WHITE":\t";r+=GRAY"origin point ";r+=GREEN"←";r+=GRAY"/";r+=YELLOW"→";r+=GRAY"/";r+=RED"↑";r+=GRAY"/";r+=BLUE"↓";r+=GRAY")\n";
-    r+=GREEN"Z";r+=GRAY"/";r+=YELLOW"X";r+=WHITE":\t\t";r+=GRAY"colors palett = ";r+=GREEN"previous";r+=GRAY"/";r+=YELLOW"next";r+=GRAY"\n";
+    std::string r;
+    r+=RED"CONTROL MANUAL:\n";
+    r+=RED"|";r+=WHITE"clic gauche:\t";r+=GRAY"origin window = origin clic\n\t\tzoom x 5\n";
+    r+=RED"|";r+=WHITE"clic droit:\t";r+=GRAY"zoom x 0.2\n";
+    r+=RED"|";r+=RED"ESC";r+="\t\t";r+=RED"exit\n";
+    r+=RED"|";r+=RED"E";r+=WHITE"/";r+=BLUE"Q";  r+=WHITE":\t\t";
+    r+=RED"|";r+=GRAY"zoom x ";r+=RED"2";r+=WHITE"/";r+=BLUE"0.5\n";
+    r+=RED"|";r+= RED"R";r+= WHITE"/";r+=BLUE"F";r+=WHITE":\t\t";
+    r+=RED"|";r+= GRAY"iteration ";r+=RED"+";r+=GRAY"/";r+=BLUE"-";r+=GRAY;r+=" 1\n";
+    r+=RED"|";r+=GREEN"A";r+=GRAY"/";r+=YELLOW"D";r+=WHITE"/";r+=RED"W";r+=GRAY"/";r+=BLUE"S";r+=WHITE":\t";
+    r+=RED"|";r+=GRAY"origin point ";r+=GREEN"◄";r+=GRAY"/";r+=YELLOW"►";r+=GRAY"/";r+=RED"▲";r+=GRAY"/";r+=BLUE"▼";r+=GRAY"\n";
+    r+=RED"|";r+=GREEN"Z";r+=GRAY"/";r+=YELLOW"X";r+=WHITE":\t\t";r+=GRAY"colors palett = ";r+=GREEN"previous";r+=GRAY"/";r+=YELLOW"next";r+=GRAY"\n";
+
     return r;
 }
 
@@ -131,16 +145,46 @@ sf::Color calculMandelbrotPixel(std::vector<sf::Color> colors, int x, int y, int
         return linear_interpolation(color1, color2, mu - i_mu);
 }
 
-#define NB_THREADS 1
-void draw(sf::Image *image, std::string colorsName, std::vector<sf::Color> colors, const int& W, const int& H){
-    int thread_id = 0, x, y;
-    for (int i = 0; i < W * H; i++){
-        if (thread_id == NB_THREADS) thread_id = 0;
-        x = i % W; y = i / W;
-        image->setPixel(x, y, calculMandelbrotPixel(colors, x, y, W, H));
-        thread_id++;
+// #define NB_THREADS 1
+// void draw(sf::Image *image, std::string colorsName, std::vector<sf::Color> colors, const int& W, const int& H){
+//     int thread_id = 0, x, y;
+//     for (int i = 0; i < W * H; i++){
+//         if (thread_id == NB_THREADS) thread_id = 0;
+//         x = i % W; y = i / W;
+//         image->setPixel(x, y, calculMandelbrotPixel(colors, x, y, W, H));
+//         thread_id++;
+//     }
+// }
+#define NB_THREADS 8
+
+void threading(int part, int W, int H, std::vector<sf::Color> colors, sf::Image &image)
+{
+    int x, y;
+    int i = (W * H) / NB_THREADS * part;  // the start pixel of the current thread
+    int end = ((W * H) / NB_THREADS) + i; // the end pixel of the current thread
+    for (; (i < W * H) && (i < end); i++) // while max pixel, or max pixel in this thread
+    {
+        x = i % W;
+        y = i / W;
+        sf::Color c = calculMandelbrotPixel(colors, x, y, W, H);
+        image.setPixel(x, y, c);
     }
 }
+
+void draw(sf::Image *image, std::string colorsName, std::vector<sf::Color> colors, const int &W, const int &H)
+{
+    std::thread t[W * H];
+    int thread_id = 0, x, y;
+    for (int i = 0; i < NB_THREADS; i++) // create thread for each part of the image (nb of thread)
+    {
+        t[i] = std::thread(threading, i, W, H, colors, std::ref(*image));
+    }
+    for (int i = 0; i < NB_THREADS; i++) // wait for all threads to finish
+    {
+        t[i].join();
+    }
+}
+/**/
 
 int main(int ac, char **av){
     if (ac != 2) {std::cerr << "Error: invalid number of arguments. Use \"./fractol <window's width>\"" << std::endl; return 1;}
