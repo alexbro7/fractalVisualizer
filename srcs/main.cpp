@@ -7,19 +7,22 @@
 #include <SFML/Graphics.hpp>
 #include <thread>
 
-#define RED     "\033[1;31m"
-#define GREEN   "\033[1;32m"
-#define WHITE   "\033[1;37m"
-#define YELLOW  "\033[1;33m"
-#define BLUE    "\033[1;34m"
-
-// #define MAGENTA    "\033[1;35m"
-// #define BLUE1    "\033[1;36m"
-// #define REDW    "\033[1;41m"
-// #define REDW    "\033[1;42m"
-// #define REDW    "\033[1;43m"
-// #define REDW    "\033[1;44m"
-#define GRAY   "\033[0m"
+#define RESET       "\033[0m"
+#define BLACK       "\033[1;30m"
+#define RED         "\033[1;31m"
+#define GREEN       "\033[1;32m"
+#define YELLOW      "\033[1;33m"
+#define BLUE        "\033[1;34m"
+#define MAGENTA     "\033[1;35m"
+#define BLUE1       "\033[1;36m"
+#define WHITE       "\033[1;37m"
+#define WRED        "\033[1;41m"
+#define WGREEN      "\033[1;42m"
+#define WYELLOW     "\033[1;43m"
+#define WBLUE       "\033[1;44m"
+#define WMAGENTA    "\033[1;45m"
+#define WBLUE1      "\033[1;46m"
+#define WWHITE      "\033[1;47m"
 
 int max_iter = 128;
 double zoom = 1.0;
@@ -28,18 +31,20 @@ double min_im = -1, max_im = 1;
 
 const std::string manuel() {
     std::string r;
-    r+=RED"CONTROL MANUAL:\n";
-    r+=RED"|";r+=WHITE"clic gauche:\t";r+=GRAY"origin window = origin clic\n\t\tzoom x 5\n";
-    r+=RED"|";r+=WHITE"clic droit:\t";r+=GRAY"zoom x 0.2\n";
-    r+=RED"|";r+=RED"ESC";r+="\t\t";r+=RED"exit\n";
-    r+=RED"|";r+=RED"E";r+=WHITE"/";r+=BLUE"Q";  r+=WHITE":\t\t";
-    r+=RED"|";r+=GRAY"zoom x ";r+=RED"2";r+=WHITE"/";r+=BLUE"0.5\n";
-    r+=RED"|";r+= RED"R";r+= WHITE"/";r+=BLUE"F";r+=WHITE":\t\t";
-    r+=RED"|";r+= GRAY"iteration ";r+=RED"+";r+=GRAY"/";r+=BLUE"-";r+=GRAY;r+=" 1\n";
-    r+=RED"|";r+=GREEN"A";r+=GRAY"/";r+=YELLOW"D";r+=WHITE"/";r+=RED"W";r+=GRAY"/";r+=BLUE"S";r+=WHITE":\t";
-    r+=RED"|";r+=GRAY"origin point ";r+=GREEN"◄";r+=GRAY"/";r+=YELLOW"►";r+=GRAY"/";r+=RED"▲";r+=GRAY"/";r+=BLUE"▼";r+=GRAY"\n";
-    r+=RED"|";r+=GREEN"Z";r+=GRAY"/";r+=YELLOW"X";r+=WHITE":\t\t";r+=GRAY"colors palett = ";r+=GREEN"previous";r+=GRAY"/";r+=YELLOW"next";r+=GRAY"\n";
-
+    r+=WRED;
+    r+=RED" CONTROL MANUAL=\n";
+    r+=RESET;
+    r+=WRED" ";r+=RESET;r+=WHITE"clic gauche:\t";r+=RESET"origin window = origin clic\n";
+    r+=WRED" ";r+=RESET;r+=RESET"\t\tzoom x 5\n";
+    r+=WRED" ";r+=RESET;r+=WHITE"clic droit:\t";r+=RESET"zoom x 0.2\n";
+    r+=WRED" ";r+=RESET;r+=WHITE"[ESC]";r+="\t\t";r+=RED"exit\n";
+    r+=WRED" ";r+=RESET;r+=RED"[E";r+=WHITE"/";r+=BLUE"Q]";  r+=WHITE":\t\t";
+    r+=RESET"zoom x ";r+=RED"2";r+=WHITE"/";r+=BLUE"0.5\n";
+    r+=WRED" ";r+= RED"[R";r+= WHITE"/";r+=BLUE"F]";r+=WHITE":\t\t";
+    r+= RESET"iteration ";r+=RED"+";r+=RESET"/";r+=BLUE"-";r+=RESET;r+=" 1\n";
+    r+=WRED" ";r+=GREEN"A";r+=RESET"/";r+=YELLOW"D";r+=WHITE"/";r+=RED"W";r+=RESET"/";r+=BLUE"S";r+=WHITE":\t";
+    r+=RESET"origin point ";r+=GREEN"◄";r+=RESET"/";r+=YELLOW"►";r+=RESET"/";r+=RED"▲";r+=RESET"/";r+=BLUE"▼";r+=RESET"\n";
+    r+=WRED" ";r+=GREEN"Z";r+=RESET"/";r+=YELLOW"X";r+=WHITE":\t\t";r+=RESET"colors palett = ";r+=GREEN"previous";r+=RESET"/";r+=YELLOW"next";r+=RESET"\n";
     return r;
 }
 
@@ -66,11 +71,11 @@ const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>
 }
 
 void printColors(std::map<const std::string, std::vector<sf::Color> >colors){
-    std::cout << YELLOW << "|COLOR PALETTS:" << GRAY << std::endl;
+    std::cout << YELLOW << "|COLOR PALETTS:" << RESET << std::endl;
     for (std::map<const std::string, std::vector<sf::Color> >::const_iterator it = colors.begin(); it != colors.end(); it++){
-        std::cout << YELLOW << "|" << WHITE << it->first << ":" << GRAY << std::endl;
+        std::cout << YELLOW << "|" << WHITE << it->first << ":" << RESET << std::endl;
         for (std::vector<sf::Color>::const_iterator it2 = it->second.begin(); it2 != it->second.end(); it2++)
-            std::cout << YELLOW << "| " << RED << (int)it2->r << GRAY << "," << GREEN << (int)it2->g << GRAY << "," << BLUE << (int)it2->b << GRAY << std::endl;
+            std::cout << YELLOW << "| " << RED << (int)it2->r << RESET << "," << GREEN << (int)it2->g << RESET << "," << BLUE << (int)it2->b << RESET << std::endl;
     }
 }
 
@@ -191,7 +196,7 @@ int main(int ac, char **av){
     if (!isInteger(av[1])) {std::cerr << "Error: invalid width." << std::endl; return 1;}
     int W = std::atoi(av[1]), H = W/16*9;
     if (W < 16) {std::cerr << "Error: Window's width must be >= 16." << std::endl; return 1;}
-    sf::RenderWindow    window(sf::VideoMode(W, H), "Mandelbrot");
+    sf::RenderWindow    window(sf::VideoMode(W, H), "Mandelbrot"); window.setFramerateLimit(60); 
     sf::Image image; image.create(W,H);
     sf::Texture texture;
     sf::Sprite sprite;
