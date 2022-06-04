@@ -14,16 +14,15 @@
 #define YELLOW      "\033[1;33m"
 #define BLUE        "\033[1;34m"
 #define MAGENTA     "\033[1;35m"
-#define BLUE1       "\033[1;36m"
+#define CYAN        "\033[1;36m"
 #define WHITE       "\033[1;37m"
-
 #define WRED        "\033[1;41m"
 #define WGREEN      "\033[1;42m"
 #define WYELLOW     "\033[1;43m"
 #define WBLUE       "\033[1;44m"
 #define WMAGENTA    "\033[1;45m"
-#define WBLUE1      "\033[1;46m"
-#define WWHITE      "\033[1;47m"
+#define WCYAN       "\033[1;46m"
+#define GWHITE      "\033[1;47m"
 
 int max_iter = 128;
 double zoom = 1.0;
@@ -32,12 +31,14 @@ double min_im = -1, max_im = 1;
 
 const std::string manuel() {
     std::string r;
-    r+=WRED;
-    r+=RED"CONTROL MANUAL=\n";
-    r+=RESET;
+    r += GWHITE"HELLOPPP\n";
+    // r+=WRED;
+    // r+=RED"CONTROL MANUAL=\n";
+    // r+=RESET;
 
     // LEFTCLIC 
-    r+=WRED" ";r+=RESET;r+=WHITE"left clic:\t";r+=RESET"window's center point = clicked point\n\t\tzoom x 5\n";
+    // r+=WRED" ";r+=RESET;r+=WHITE"left clic:\t";r+=RESET"window's center point = clicked point\n\t\tzoom x 5\n";
+    return r;
     // RIGHTCLIC
     r+=WRED" ";r+=RESET;r+=WHITE"rightclic:\t";r+=RESET"zoom x 0.2\n";
     // ESC
