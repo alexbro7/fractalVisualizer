@@ -7,45 +7,45 @@
 #include <SFML/Graphics.hpp>
 #include <thread>
 
-// #define RST "\033[0m"
-// #define N   "\033[1;30m"
-// #define R   "\033[1;31m"
-// #define G   "\033[1;32m"
-// #define Y   "\033[1;33m"
-// #define B   "\033[1;34m"
-// #define M   "\033[1;35m"
-// #define C   "\033[1;36m"
-// #define windowWidth   "\033[1;37m"
-// #define OR  "\033[1;41m"
+#define RST "\033[0m"
+#define N   "\033[1;30m"
+#define R   "\033[1;31m"
+#define G   "\033[1;32m"
+#define Y   "\033[1;33m"
+#define B   "\033[1;34m"
+#define M   "\033[1;35m"
+#define C   "\033[1;36m"
+#define W   "\033[1;37m"
+#define OR  "\033[1;41m"
 
 int max_iter = 128;
 double zoom = 1.0;
 double min_re = -2.5, max_re = 1;
 double min_im = -1, max_im = 1;
 
-// const std::string manuel() {
-//     std::string r;
-//     r += "CONTROL MANUAL=\n";
-//     // LEFTCLIC 
-//     r += " left clic:\twindow's center point = clicked point\n\t\tzoom x 5\n";
-//     // RIGHTCLIC
-//     r += " rightclic:\tzoom x 0.2\n";
-//     // ESC
-//     r += "[ESC]:\t\texit\n";
-//     // E/Q
-//     r += "[E/Q]:\t\t";
-//     r+= "zoom x 2/0.5\n";
-//     // R/F
-//     r+=" [R/F]:\t\titeration +/- 1\n";
-//     // A/D/windowWidth/S
-//     r += " A/D/windowWidth/S:\t";
-//     r+=RST"origin point ◄/►/▲/▼\n";
-//     //Z/X
-//     r+=" Z/X:\t\tcolors palett = previous/next\n";
+const std::string manuel() {
+    std::string r;
+    r += "CONTROL MANUAL=\n";
+    // LEFTCLIC 
+    r += " left clic:\twindow's center point = clicked point\n\t\tzoom x 5\n";
+    // RIGHTCLIC
+    r += " rightclic:\tzoom x 0.2\n";
+    // ESC
+    r += "[ESC]:\t\texit\n";
+    // E/Q
+    r += "[E/Q]:\t\t";
+    r+= "zoom x 2/0.5\n";
+    // R/F
+    r+=" [R/F]:\t\titeration +/- 1\n";
+    // A/D/windowWidth/S
+    r += " A/D/windowWidth/S:\t";
+    r+=RST"origin point ◄/►/▲/▼\n";
+    //Z/X
+    r+=" Z/X:\t\tcolors palett = previous/next\n";
 
 
-//     return r;
-// }
+    return r;
+}
 
 bool error_msg(const std::string& s) {std::cerr << s << std::endl; return false;}
 
@@ -57,17 +57,17 @@ bool isInteger(const char* s) {for (std::string::size_type i = 0; i < strlen(s);
 
 int integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i) return r; else i /= 10;}}
 
-// const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
-//     std::string s(windowWidth + n + ":\n");
-//     for (std::vector<sf::Color>::const_iterator it = v.begin(); it != v.end(); it++){
-//         s += " " + (R + std::to_string((int)it->r));
-//         for (char a = 3; a > integerLength((int)it->r); a--) s += " "; s += " ";
-//         s += G + std::to_string((int)it->g);
-//         for (char a = 3; a > integerLength((int)it->g); a--) s += " "; s += " ";
-//         s += B + std::to_string((int)it->b) + "\n";
-//     }
-//     return s;
-// }
+const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
+    std::string s(W + n + ":\n");
+    for (std::vector<sf::Color>::const_iterator it = v.begin(); it != v.end(); it++){
+        s += " " + (R + std::to_string((int)it->r));
+        for (char a = 3; a > integerLength((int)it->r); a--) s += " "; s += " ";
+        s += G + std::to_string((int)it->g);
+        for (char a = 3; a > integerLength((int)it->g); a--) s += " "; s += " ";
+        s += B + std::to_string((int)it->b) + "\n";
+    }
+    return s;
+}
 
 // void printColors(std::map<const std::string, std::vector<sf::Color> >colors){
 //     std::cout << Y << "|COLOR PALETTS:" << RST << std::endl;
@@ -237,8 +237,8 @@ int main(int ac, char **av){
                     if (e.key.code == sf::Keyboard::Q) {zoom_x(1.0 / 2); zoom /= 2;}
                     if (e.key.code == sf::Keyboard::E) {zoom_x(2); ; zoom *= 2;}
                 }
-                // if (e.key.code == sf::Keyboard::M) std::cout << manuel() << std::endl;
-                // if (e.key.code == sf::Keyboard::C) std::cout << vecClrToStr(colorPalett->first, colorPalett->second) << std::endl;
+                if (e.key.code == sf::Keyboard::M) std::cout << manuel() << std::endl;
+                if (e.key.code == sf::Keyboard::C) std::cout << vecClrToStr(colorPalett->first, colorPalett->second) << std::endl;
                 if (e.key.code == sf::Keyboard::Z && colors.size() > 1) {
                     if (colorPalett == colors.begin()) 
                         colorPalett = colorPalettEnd; 
