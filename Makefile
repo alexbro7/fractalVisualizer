@@ -1,46 +1,7 @@
-# NAME = fractalVisualizer
-# CC = g++
-# FLAGS = -std=c++11 -g3 -fsanitize=address #-W -Wall -Wextra -Werror
-# SFML = -I/usr/local/Cellar/sfml/2.5.1_1/include -L/usr/local/Cellar/sfml/2.5.1_1/lib -lsfml-graphics -lsfml-window -lsfml-system
-# RM = rm -f
-# SRCS =	srcs/main.cpp \
-# # SRCS =	Color.cpp \
-# # 		Point.cpp \
-# # 		Plan.cpp \
-# # 		main.cpp
-
-# OBJS = ${SRCS:.cpp=.o}
-
-# .cpp.o:
-# 	${CC} ${FLAGS} ${SFML} -c $< -o ${<:.cpp=.o}
-
-# all: ${NAME}
-
-# ${NAME}: ${OBJS}
-# 	${CC} ${FLAGS} ${SFML} -o ${NAME} ${OBJS}
-
-# clean:
-# 	${RM} *.o
-
-# fclean: clean
-# 	${RM} ${NAME}
-
-# re: fclean all
-
-# .PHONY	: all clean fclean re
-#  |  |  ___ \    \  |         |
-#  |  |     ) |  |\/ |   _  |  |  /   _ 
-# ___ __|  __/   |   |  (   |    <    __/ 
-#    _|  _____| _|  _| \__,_| _|\_\ \___|
-#                              by jcluzet
-################################################################################
-#                                     CONFIG                                   #
-################################################################################
-
 NAME        := fractalVisualizer
 CC         := c++
-MACOS_FLAGS    := -std=c++11 -I/usr/local/Cellar/sfml/2.5.1_1/include/ -L/usr/local/Cellar/sfml/2.5.1_1/lib -lsfml-graphics -lsfml-window -lsfml-system
-MACARM_FLAGS    := -std=c++11 -I/opt/homebrew/Cellar/sfml/2.5.1_1/include/ -L/opt/homebrew/Cellar/sfml/2.5.1_1/lib -lsfml-graphics -lsfml-window -lsfml-system
+MACOS_FLAGS    := -std=c++11 -Wall -Werror -Wextra -W -I/usr/local/Cellar/sfml/2.5.1_1/include/ -L/usr/local/Cellar/sfml/2.5.1_1/lib -lsfml-graphics -lsfml-window -lsfml-system
+MACARM_FLAGS    := -std=c++11 -Wall -Werror -Wextra -W -I/opt/homebrew/Cellar/sfml/2.5.1_1/include/ -L/opt/homebrew/Cellar/sfml/2.5.1_1/lib -lsfml-graphics -lsfml-window -lsfml-system
 LINUX_FLAGS    :=
 
 ################################################################################

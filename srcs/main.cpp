@@ -15,7 +15,7 @@
 // #define B   "\033[1;34m"
 // #define M   "\033[1;35m"
 // #define C   "\033[1;36m"
-// #define W   "\033[1;37m"
+// #define windowWidth   "\033[1;37m"
 // #define OR  "\033[1;41m"
 
 int max_iter = 128;
@@ -37,8 +37,8 @@ double min_im = -1, max_im = 1;
 //     r+= "zoom x 2/0.5\n";
 //     // R/F
 //     r+=" [R/F]:\t\titeration +/- 1\n";
-//     // A/D/W/S
-//     r += " A/D/W/S:\t";
+//     // A/D/windowWidth/S
+//     r += " A/D/windowWidth/S:\t";
 //     r+=RST"origin point ◄/►/▲/▼\n";
 //     //Z/X
 //     r+=" Z/X:\t\tcolors palett = previous/next\n";
@@ -53,12 +53,12 @@ bool isBlank(const char& c) {return (c == ' ' || c == '\n' || c == '\t' || c == 
 
 bool isDigit(const char& c) {return (c >= '0' && c <= '9') ? true : false;}
 
-bool isInteger(const char* s) {for (int i = 0; i < strlen(s); i++) if (!isDigit(s[i])) return false; return true;}
+bool isInteger(const char* s) {for (std::string::size_type i = 0; i < strlen(s); i++) if (!isDigit(s[i])) return false; return true;}
 
 int integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i) return r; else i /= 10;}}
 
 // const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
-//     std::string s(W + n + ":\n");
+//     std::string s(windowWidth + n + ":\n");
 //     for (std::vector<sf::Color>::const_iterator it = v.begin(); it != v.end(); it++){
 //         s += " " + (R + std::to_string((int)it->r));
 //         for (char a = 3; a > integerLength((int)it->r); a--) s += " "; s += " ";
@@ -72,7 +72,7 @@ int integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i) ret
 // void printColors(std::map<const std::string, std::vector<sf::Color> >colors){
 //     std::cout << Y << "|COLOR PALETTS:" << RST << std::endl;
 //     for (std::map<const std::string, std::vector<sf::Color> >::const_iterator it = colors.begin(); it != colors.end(); it++){
-//         std::cout << Y << "|" << W << it->first << ":" << RST << std::endl;
+//         std::cout << Y << "|" << windowWidth << it->first << ":" << RST << std::endl;
 //         for (std::vector<sf::Color>::const_iterator it2 = it->second.begin(); it2 != it->second.end(); it2++)
 //             std::cout << Y << "| " << R << (int)it2->r << RST << "," << G << (int)it2->g << RST << "," << B << (int)it2->b << RST << std::endl;
 //     }
@@ -123,9 +123,9 @@ std::map<const std::string, std::vector<sf::Color> > loadColors() {
     return colors;
 }
 
-sf::Color calculMandelbrotPixel(std::vector<sf::Color> colors, int x, int y, int W, int H){
-        double cr = min_re + (max_re - min_re) * x / W;
-        double ci = min_im + (max_im - min_im) * y / H;
+sf::Color calculMandelbrotPixel(std::vector<sf::Color> colors, int x, int y, int windowWidth, int windowHeight){
+        double cr = min_re + (max_re - min_re) * x / windowWidth;
+        double ci = min_im + (max_im - min_im) * y / windowHeight;
         double re = 0, im = 0;
         int iter;
         for (iter = 0; iter < max_iter; iter++){
@@ -134,8 +134,8 @@ sf::Color calculMandelbrotPixel(std::vector<sf::Color> colors, int x, int y, int
             re = tr;
             if (re * re + im * im > 2 * 2) break;
         }
-        int r = 1.0 * (max_iter - iter) / max_iter * 0xff;
-        int g = r, b = r;
+        // int r = 1.0 * (max_iter - iter) / max_iter * 0xff;
+        // int g = r, b = r;
 
 
         static const auto max_color = colors.size() - 1;
@@ -150,38 +150,38 @@ sf::Color calculMandelbrotPixel(std::vector<sf::Color> colors, int x, int y, int
 }
 
 // #define NB_THREADS 1
-// void draw(sf::Image *image, std::string colorsName, std::vector<sf::Color> colors, const int& W, const int& H){
+// void draw(sf::Image *image, std::string colorsName, std::vector<sf::Color> colors, const int& windowWidth, const int& windowHeight){
 //     int thread_id = 0, x, y;
-//     for (int i = 0; i < W * H; i++){
+//     for (int i = 0; i < windowWidth * windowHeight; i++){
 //         if (thread_id == NB_THREADS) thread_id = 0;
-//         x = i % W; y = i / W;
-//         image->setPixel(x, y, calculMandelbrotPixel(colors, x, y, W, H));
+//         x = i % windowWidth; y = i / windowWidth;
+//         image->setPixel(x, y, calculMandelbrotPixel(colors, x, y, windowWidth, windowHeight));
 //         thread_id++;
 //     }
 // }
 #define NB_THREADS 8
 
-void threading(int part, int W, int H, std::vector<sf::Color> colors, sf::Image &image)
+void threading(int part, int windowWidth, int windowHeight, std::vector<sf::Color> colors, sf::Image &image)
 {
     int x, y;
-    int i = (W * H) / NB_THREADS * part;  // the start pixel of the current thread
-    int end = ((W * H) / NB_THREADS) + i; // the end pixel of the current thread
-    for (; (i < W * H) && (i < end); i++) // while max pixel, or max pixel in this thread
+    int i = (windowWidth * windowHeight) / NB_THREADS * part;  // the start pixel of the current thread
+    int end = ((windowWidth * windowHeight) / NB_THREADS) + i; // the end pixel of the current thread
+    for (; (i < windowWidth * windowHeight) && (i < end); i++) // while max pixel, or max pixel in this thread
     {
-        x = i % W;
-        y = i / W;
-        sf::Color c = calculMandelbrotPixel(colors, x, y, W, H);
+        x = i % windowWidth;
+        y = i / windowWidth;
+        sf::Color c = calculMandelbrotPixel(colors, x, y, windowWidth, windowHeight);
         image.setPixel(x, y, c);
     }
 }
 
-void draw(sf::Image *image, std::string colorsName, std::vector<sf::Color> colors, const int &W, const int &H)
+void draw(sf::Image *image, std::vector<sf::Color> colors, const int &windowWidth, const int &windowHeight)
 {
-    std::thread t[W * H];
-    int thread_id = 0, x, y;
+    std::thread t[windowWidth * windowHeight];
+    // int thread_id = 0;
     for (int i = 0; i < NB_THREADS; i++) // create thread for each part of the image (nb of thread)
     {
-        t[i] = std::thread(threading, i, W, H, colors, std::ref(*image));
+        t[i] = std::thread(threading, i, windowWidth, windowHeight, colors, std::ref(*image));
     }
     for (int i = 0; i < NB_THREADS; i++) // wait for all threads to finish
     {
@@ -193,10 +193,10 @@ void draw(sf::Image *image, std::string colorsName, std::vector<sf::Color> color
 int main(int ac, char **av){
     if (ac != 2) {std::cerr << "Error: invalid number of arguments. Use \"./fractol <window's width>\"" << std::endl; return 1;}
     if (!isInteger(av[1])) {std::cerr << "Error: invalid width." << std::endl; return 1;}
-    int W = std::atoi(av[1]), H = W/16*9;
-    if (W < 16) {std::cerr << "Error: Window's width must be >= 16." << std::endl; return 1;}
-    sf::RenderWindow    window(sf::VideoMode(W, H), "Mandelbrot"); window.setFramerateLimit(60); 
-    sf::Image image; image.create(W,H);
+    int windowWidth = std::atoi(av[1]), windowHeight = windowWidth/16*9;
+    if (windowWidth < 16) {std::cerr << "Error: Window's width must be >= 16." << std::endl; return 1;}
+    sf::RenderWindow    window(sf::VideoMode(windowWidth, windowHeight), "Mandelbrot"); window.setFramerateLimit(60); 
+    sf::Image image; image.create(windowWidth,windowHeight);
     sf::Texture texture;
     sf::Sprite sprite;
     sf::Font font; font.loadFromFile("Helvetica.ttc");
@@ -222,8 +222,8 @@ int main(int ac, char **av){
                 if (e.key.code == sf::Keyboard::Q || e.key.code == sf::Keyboard::E){
                     auto zoom_x = [&](double z){
                         // mouse point will be new center point
-                        double cr = min_re + (max_re - min_re) * (W/2) / W;
-                        double ci = min_im + (max_im - min_im) * (H/2) / H;
+                        double cr = min_re + (max_re - min_re) * (windowWidth/2) / windowWidth;
+                        double ci = min_im + (max_im - min_im) * (windowHeight/2) / windowHeight;
 
                         // zoon
                         double tminr = cr - (max_re - min_re) / 2 / z;
@@ -255,8 +255,8 @@ int main(int ac, char **av){
             if (e.type == sf::Event::MouseButtonPressed){
                 auto zoom_x = [&](double z){
                     // mouse point will be new center point
-                    double cr = min_re + (max_re - min_re) * e.mouseButton.x / W;
-                    double ci = min_im + (max_im - min_im) * e.mouseButton.y / H;
+                    double cr = min_re + (max_re - min_re) * e.mouseButton.x / windowWidth;
+                    double ci = min_im + (max_im - min_im) * e.mouseButton.y / windowHeight;
 
                     // zoon
                     double tminr = cr - (max_re - min_re) / 2 / z;
@@ -272,7 +272,7 @@ int main(int ac, char **av){
             }
         }
         window.clear();
-        draw(&image, colorPalett->first, colorPalett->second, W, H);
+        draw(&image, colorPalett->second, windowWidth, windowHeight);
         texture.loadFromImage(image);
         sprite.setTexture(texture);
         window.draw(sprite);
