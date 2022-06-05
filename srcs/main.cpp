@@ -17,7 +17,7 @@
 #define CR		"\033[31m" // red
 #define CG		"\033[32m" // green
 #define CB		"\033[34m" // blue
-#define CM		"\033[35m" // magenta
+#define CP		"\033[35m" // magenta
 #define CY		"\033[33m" // yellow
 #define CC		"\033[36m" // cyan
 #define CW		"\033[37m" // white
@@ -26,7 +26,7 @@
 #define OR		"\033[41m" // overline_red
 #define OG		"\033[42m" // overline_green
 #define OB		"\033[44m" // overline_blue
-#define OM		"\033[45m" // overline_magenta
+#define OP		"\033[45m" // overline_magenta
 #define OY		"\033[43m" // overline_yellow
 #define OC		"\033[46m" // overline_cyan
 #define OW		"\033[47m" // overline_white
@@ -56,7 +56,7 @@ const std::string manuel() {
     // r += " Z/X:\t\tcolors palett = previous/next\n";
 
     
-    r += OW CN BLD "[" CY "Z" CN "]" SPL BLD CW "/" OW CN "[" CG "X" CN "]" SPL BLD CW "= " SPL "Color palette = " CY "previous" CW BLD " / " CY SPL "next\n";
+    r += OW CN BLD "[" CP "Z" CN "]" SPL BLD CW "/" OW CN "[" CG "X" CN "]" SPL BLD CW "= " SPL "Color palette = " CCMY "previous" CW BLD " / " CG SPL "next\n";
 
     r += OW CN BLD "[" CR "ESC" CN "]" SPL BLD CW "= " SPL CR "Exit program.\n";
     return r;
