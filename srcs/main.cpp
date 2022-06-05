@@ -71,25 +71,19 @@ bool isInteger(const char* s) {for (std::string::size_type i = 0; i < strlen(s);
 int integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i) return r; else i /= 10;}}
 
 const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
-    std::string s(OW);
-    for (std::string::size_type a = 20; a > 0; a--) s += " "; s += SPL;
+    std::string s(BLD ON CW " "); s += n + ":"; for (std::string::size_type a = 18; a > n.length(); a--) s += " "; s+= SPL "\n";
+    s += ON;
     for (std::string::size_type a = 20; a > 0; a--) s += " "; s += SPL "\n";
-    s+=BLD OW CN " ";
-    // for (std::string::size_type a = 18; a > 0; a--) s += " "; s += "\n";
-    s += n + ":";
-    for (std::string::size_type a = 18; a > n.length(); a--) s += " ";
-    s+= SPL"\n";
-    
-    s += BLD OW CW;// s+= OW CN BLD;
+    s += BLD ON CW;// s+= ON CN BLD;
     for (std::vector<sf::Color>::const_iterator it = v.begin(); it != v.end(); it++){
-        s += OW " " OR;
+        s += ON " " OR;
         for (char a = 3; a > integerLength((int)it->r); a--) s += " "; s += " ";
-        s += " "; s += std::to_string((int)it->r) + " " OW; s += " " OG;
+        s += " "; s += std::to_string((int)it->r) + " " ON; s += " " OG;
         for (char a = 3; a > integerLength((int)it->g); a--) s += " "; s += " ";
-        s += std::to_string((int)it->g) + " " OW; s += " " OB;
+        s += std::to_string((int)it->g) + " " ON; s += " " OB;
         for (char a = 3; a > integerLength((int)it->b); a--) s += " "; s += " ";
-        s += std::to_string((int)it->b) + " " OW " "; s += SPL"\n";
-        s += BLD OW CW;
+        s += std::to_string((int)it->b) + " " ON " "; s += SPL"\n";
+        s += BLD ON CW;
     }
     for (std::string::size_type a = 20; a > 0; a--) s += " "; s += SPL "\n";
     return s;
