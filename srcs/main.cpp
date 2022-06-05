@@ -7,46 +7,51 @@
 #include <SFML/Graphics.hpp>
 #include <thread>
 
-#define SPL	"\033[0m"  // effect/color reset
-#define BLD	"\033[1m"  // bold 
-#define UL     "\033[4m"  // underline
-#define FLH    "\033[5m"  // bold 
-#define OL     "\033[7m"  // overline
-
-#define CN		"\033[30m" // black
-#define CR		"\033[31m" // red
-#define CG		"\033[32m" // green
-#define CB		"\033[34m" // blue
-#define CP		"\033[35m" // magenta
-#define CY		"\033[33m" // yellow
-#define CC		"\033[36m" // cyan
-#define CW		"\033[37m" // white
-
-#define ON		"\033[40m" // overline_black
-#define OR		"\033[41m" // overline_red
-#define OG		"\033[42m" // overline_green
-#define OB		"\033[44m" // overline_blue
-#define OP		"\033[45m" // overline_magenta
-#define OY		"\033[43m" // overline_yellow
-#define OC		"\033[46m" // overline_cyan
-#define OW		"\033[47m" // overline_white
+//TEXT EFFECTS
+#define SPL	    "\033[0m"  // effect/color reset
+#define BLD	    "\033[1m"  // bold 
+#define UL      "\033[4m"  // underline
+#define FLH     "\033[5m"  // bold 
+#define OL      "\033[7m"  // overline
+//TEXT COLORS
+#define CN      "\033[30m" // color_gray
+#define CR      "\033[31m" // color_red
+#define CG      "\033[32m" // color_green
+#define CB      "\033[34m" // color_blue
+#define CP      "\033[35m" // color_magenta
+#define CY      "\033[33m" // color_yellow
+#define CC      "\033[36m" // color_cyan
+#define CW      "\033[37m" // color_white
+#define ON      "\033[40m" // overline_gray
+#define OR      "\033[41m" // overline_red
+#define OG      "\033[42m" // overline_green
+#define OB      "\033[44m" // overline_blue
+#define OP      "\033[45m" // overline_magenta
+#define OY      "\033[43m" // overline_yellow
+#define OC      "\033[46m" // overline_cyan
+#define OW      "\033[47m" // overline_white
 
 int max_iter = 128;
 double zoom = 1.0;
 double min_re = -2.5, max_re = 1;
 double min_im = -1, max_im = 1;
 
-const std::string manuel() {
-    std::string r;
-    // r += "CONTROL MANUAL=\n";
+void    displayManual() {
+    std::cout << BLD OW CN " " << ".:CONTROL MANUAL:" << SPL << ON << CW << "." << "\n";
+    // r+= MOB"                  ";r+= SPL BLD MA ":.";r+= SPL"\n";
+    // r+= " " UL ".:" MOB CN BLD "[" CR "E" CN "]/[" CG "Q" CN "]" SPL MA ">\t";r+= "zoom" CR "2" MA BLD "/" SPL CG  "0.5" SPL "\n";
+    // r+= MOB "                  ";r+= SPL BLD CG ":.";r+= SPL"\n";
+    // r += OG " :" OW CN BLD "[" CB "Z" CN "]/[" CC "X" CN "]" SPL CW ">\t" CB "previous" CW BLD "/" SPL CC  "next" SPL  " color palette\n" SPL;
+    // r += OG "                 ";r+= SPL BLD CG ":.";r+= SPL"\n";
+    // r += OG " :" OW CR BLD "[ESC]" SPL CW ">\t" SPL CR "Exit program.\n";
+    // r += OG "                 ";r+= SPL BLD CG ":.";r+= SPL"\n";
     // LEFTCLIC 
     // r += " left clic:\twindow's center point = clicked point\n\t\tzoom x 5\n";
     // RIGHTCLIC
     // r += " rightclic:\tzoom x 0.2\n";
     // ESC
     // E/Q
-    // r += "[E/Q]:\t\t";
-    // r+= "zoom x 2/0.5\n";
+    // r += "[E/Q]:\t\tzoom x 2/0.5\n";
     // R/F
     // r+=" [R/F]:\t\titeration +/- 1\n";
     // A/D/windowWidth/S
@@ -54,13 +59,8 @@ const std::string manuel() {
     // r+=SPL"origin point ◄/►/▲/▼\n";
     //Z/X
     // r += " Z/X:\t\tcolors palett = previous/next\n";
-
-    
-    r += OW CN BLD "[" CP "Z" CN "]" SPL BLD CW "/" OW CN "[" CG "X" CN "]" SPL BLD CW "= " SPL "Color palette = " CCMY "previous" CW BLD " / " CG SPL "next\n";
-
-    r += OW CN BLD "[" CR "ESC" CN "]" SPL BLD CW "= " SPL CR "Exit program.\n";
-    return r;
 }
+
 
 bool error_msg(const std::string& s) {std::cerr << s << std::endl; return false;}
 
@@ -219,7 +219,8 @@ int main(int ac, char **av){
     if (colors.empty()) return 1;
     std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalett = colors.begin();
     std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalettEnd = colors.end(); if (colors.size() > 1) colorPalettEnd--;
-    std::cout << manuel() << std::endl;
+    displayManual(); std::cout << std::endl;
+return 0;
     while (window.isOpen()){
         sf::Event e;
         while (window.pollEvent(e)){
@@ -249,7 +250,7 @@ int main(int ac, char **av){
                     if (e.key.code == sf::Keyboard::Q) {zoom_x(1.0 / 2); zoom /= 2;}
                     if (e.key.code == sf::Keyboard::E) {zoom_x(2); ; zoom *= 2;}
                 }
-                if (e.key.code == sf::Keyboard::M) std::cout << manuel() << std::endl;
+                if (e.key.code == sf::Keyboard::M) displayManual(); std::cout << std::endl;
                 if (e.key.code == sf::Keyboard::Z && colors.size() > 1) {
                     if (colorPalett == colors.begin()) 
                         colorPalett = colorPalettEnd; 
