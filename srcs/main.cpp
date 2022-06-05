@@ -7,16 +7,29 @@
 #include <SFML/Graphics.hpp>
 #include <thread>
 
-#define RST "\033[0m"
-#define N   "\033[1;30m"
-#define R   "\033[1;31m"
-#define G   "\033[1;32m"
-#define Y   "\033[1;33m"
-#define B   "\033[1;34m"
-#define M   "\033[1;35m"
-#define C   "\033[1;36m"
-#define W   "\033[1;37m"
-#define OR  "\033[1;41m"
+#define SPL	"\033[0m"  // effect/color reset
+#define BLD	"\033[1m"  // bold 
+#define UL     "\033[4m"  // underline
+#define FLH    "\033[5m"  // bold 
+#define OL     "\033[7m"  // overline
+
+#define CN		"\033[30m" // black
+#define CR		"\033[31m" // red
+#define CG		"\033[32m" // green
+#define CB		"\033[34m" // blue
+#define CM		"\033[35m" // magenta
+#define CY		"\033[33m" // yellow
+#define CC		"\033[36m" // cyan
+#define CW		"\033[37m" // white
+
+#define ON		"\033[40m" // overline_black
+#define OR		"\033[41m" // overline_red
+#define OG		"\033[42m" // overline_green
+#define OB		"\033[44m" // overline_blue
+#define OM		"\033[45m" // overline_magenta
+#define OY		"\033[43m" // overline_yellow
+#define OC		"\033[46m" // overline_cyan
+#define OW		"\033[47m" // overline_white
 
 int max_iter = 128;
 double zoom = 1.0;
@@ -39,7 +52,7 @@ const std::string manuel() {
     r+=" [R/F]:\t\titeration +/- 1\n";
     // A/D/windowWidth/S
     r += " A/D/windowWidth/S:\t";
-    r+=RST"origin point ◄/►/▲/▼\n";
+    r+=SPL"origin point ◄/►/▲/▼\n";
     //Z/X
     r+=" Z/X:\t\tcolors palett = previous/next\n";
 
@@ -58,23 +71,52 @@ bool isInteger(const char* s) {for (std::string::size_type i = 0; i < strlen(s);
 int integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i) return r; else i /= 10;}}
 
 const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
-    std::string s(W + n + ":\n");
+    std::string s(OW);
+    for (std::string::size_type a = 20; a > 0; a--) s += " "; s += SPL;
+    for (std::string::size_type a = 20; a > 0; a--) s += " "; s += SPL "\n";
+    s+=BLD OW CN " ";
+    // for (std::string::size_type a = 18; a > 0; a--) s += " "; s += "\n";
+    s += n + ":";
+    for (std::string::size_type a = 18; a > n.length(); a--) s += " ";
+    s+= SPL"\n";
+    
+    s += BLD OW CW;// s+= OW CN BLD;
     for (std::vector<sf::Color>::const_iterator it = v.begin(); it != v.end(); it++){
-        s += " " + (R + std::to_string((int)it->r));
+        s += OW " " OR;
         for (char a = 3; a > integerLength((int)it->r); a--) s += " "; s += " ";
-        s += G + std::to_string((int)it->g);
+        s += " "; s += std::to_string((int)it->r) + " " OW; s += " " OG;
         for (char a = 3; a > integerLength((int)it->g); a--) s += " "; s += " ";
-        s += B + std::to_string((int)it->b) + "\n";
+        s += std::to_string((int)it->g) + " " OW; s += " " OB;
+        for (char a = 3; a > integerLength((int)it->b); a--) s += " "; s += " ";
+        s += std::to_string((int)it->b) + " " OW " "; s += SPL"\n";
+        s += BLD OW CW;
     }
+    for (std::string::size_type a = 20; a > 0; a--) s += " "; s += SPL "\n";
     return s;
 }
 
+
+// const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
+//     (void)v;
+//     std::string s;
+//     s += n + ": "; s+= "\n" ;
+//     for (std::vector<sf::Color>::const_iterator it = v.begin(); it != v.end(); it++){
+//         for (char a = 3; a > integerLength((int)it->r); a--) s += " "; s += " ";
+//         s += " "; s += std::to_string((int)it->r);
+//         for (char a = 3; a > integerLength((int)it->g); a--) s += " "; s += " ";
+//         s += std::to_string((int)it->g);
+//         for (char a = 3; a > integerLength((int)it->b); a--) s += " "; s += " ";
+//         s += std::to_string((int)it->b); s += "\n";
+//     }
+//     return s;
+// }
+
 // void printColors(std::map<const std::string, std::vector<sf::Color> >colors){
-//     std::cout << Y << "|COLOR PALETTS:" << RST << std::endl;
+//     std::cout << Y << "|COLOR PALETTS:" << SPL << std::endl;
 //     for (std::map<const std::string, std::vector<sf::Color> >::const_iterator it = colors.begin(); it != colors.end(); it++){
-//         std::cout << Y << "|" << windowWidth << it->first << ":" << RST << std::endl;
+//         std::cout << Y << "|" << windowWidth << it->first << ":" << SPL << std::endl;
 //         for (std::vector<sf::Color>::const_iterator it2 = it->second.begin(); it2 != it->second.end(); it2++)
-//             std::cout << Y << "| " << R << (int)it2->r << RST << "," << G << (int)it2->g << RST << "," << B << (int)it2->b << RST << std::endl;
+//             std::cout << Y << "| " << R << (int)it2->r << SPL << "," << G << (int)it2->g << SPL << "," << B << (int)it2->b << SPL << std::endl;
 //     }
 // }
 
@@ -193,93 +235,96 @@ void draw(sf::Image *image, std::vector<sf::Color> colors, const int &windowWidt
 int main(int ac, char **av){
     if (ac != 2) {std::cerr << "Error: invalid number of arguments. Use \"./fractol <window's width>\"" << std::endl; return 1;}
     if (!isInteger(av[1])) {std::cerr << "Error: invalid width." << std::endl; return 1;}
-    int windowWidth = std::atoi(av[1]), windowHeight = windowWidth/16*9;
-    if (windowWidth < 16) {std::cerr << "Error: Window's width must be >= 16." << std::endl; return 1;}
-    sf::RenderWindow    window(sf::VideoMode(windowWidth, windowHeight), "Mandelbrot"); window.setFramerateLimit(60); 
-    sf::Image image; image.create(windowWidth,windowHeight);
-    sf::Texture texture;
-    sf::Sprite sprite;
-    sf::Font font; font.loadFromFile("Helvetica.ttc");
-    sf::Text text; text.setFont(font); text.setCharacterSize(24); text.setFillColor(sf::Color::Red);
-    std::map<const std::string, std::vector<sf::Color> > colors = loadColors();
-    if (colors.empty()) return 1;
-    std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalett = colors.begin();
-    std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalettEnd = colors.end(); if (colors.size() > 1) colorPalettEnd--;
-
-    std::cout << "Press key C for display color palett." << std::endl;
-    std::cout << "Press key M for display control manuel." << std::endl;
-    while (window.isOpen()){
-        sf::Event e;
-        while (window.pollEvent(e)){
-            if (e.type == sf::Event::Closed || (e.type == sf::Event::KeyPressed && e.key.code == sf::Keyboard::Escape)) window.close();
-            if (e.type == sf::Event::KeyPressed){
-                if (e.key.code == sf::Keyboard::A) {double w = (max_re - min_re) * 0.3; min_re -= w; max_re -= w;}
-                if (e.key.code == sf::Keyboard::D) {double w = (max_re - min_re) * 0.3; min_re += w; max_re += w;}
-                if (e.key.code == sf::Keyboard::W) {double h = (max_im - min_im) * 0.3; min_im -= h; max_im -= h;}
-                if (e.key.code == sf::Keyboard::S) {double h = (max_im - min_im) * 0.3; min_im += h; max_im += h;}
-                if (e.key.code == sf::Keyboard::F) {max_iter -= 10; if (max_iter < 1) max_iter = 1;}
-                if (e.key.code == sf::Keyboard::R) {max_iter += 10; if (max_iter < 1) max_iter = 1;}
-                if (e.key.code == sf::Keyboard::Q || e.key.code == sf::Keyboard::E){
-                    auto zoom_x = [&](double z){
+std::map<const std::string, std::vector<sf::Color> > colors = loadColors();
+std::cout << vecClrToStr(colors.begin()->first, colors.begin()->second) << std::endl;
+    // int windowWidth = std::atoi(av[1]), windowHeight = windowWidth/16*9;
+    // if (windowWidth < 16) {std::cerr << "Error: Window's width must be >= 16." << std::endl; return 1;}
+    // sf::RenderWindow    window(sf::VideoMode(windowWidth, windowHeight), "Mandelbrot"); window.setFramerateLimit(60); 
+    // sf::Image image; image.create(windowWidth,windowHeight);
+    // sf::Texture texture;
+    // sf::Sprite sprite;
+    // sf::Font font; font.loadFromFile("Helvetica.ttc");
+    // sf::Text text; text.setFont(font); text.setCharacterSize(24); text.setFillColor(sf::Color::Red);
+    // std::map<const std::string, std::vector<sf::Color> > colors = loadColors();
+    // if (colors.empty()) return 1;
+    // std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalett = colors.begin();
+    // std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalettEnd = colors.end(); if (colors.size() > 1) colorPalettEnd--;
+// std::cout << "Press key C for display color palett." << std::endl;
+// std::cout << "Press key M for display control manuel." << std::endl;
+// return 3;
+    // while (window.isOpen()){
+        // sf::Event e;
+        // while (window.pollEvent(e)){
+            // if (e.type == sf::Event::Closed || (e.type == sf::Event::KeyPressed && e.key.code == sf::Keyboard::Escape)) window.close();
+            // if (e.type == sf::Event::KeyPressed){
+                // if (e.key.code == sf::Keyboard::A) {double w = (max_re - min_re) * 0.3; min_re -= w; max_re -= w;}
+                // if (e.key.code == sf::Keyboard::D) {double w = (max_re - min_re) * 0.3; min_re += w; max_re += w;}
+                // if (e.key.code == sf::Keyboard::W) {double h = (max_im - min_im) * 0.3; min_im -= h; max_im -= h;}
+                // if (e.key.code == sf::Keyboard::S) {double h = (max_im - min_im) * 0.3; min_im += h; max_im += h;}
+                // if (e.key.code == sf::Keyboard::F) {max_iter -= 10; if (max_iter < 1) max_iter = 1;}
+                // if (e.key.code == sf::Keyboard::R) {max_iter += 10; if (max_iter < 1) max_iter = 1;}
+                // if (e.key.code == sf::Keyboard::Q || e.key.code == sf::Keyboard::E){
+                    // auto zoom_x = [&](double z){
                         // mouse point will be new center point
-                        double cr = min_re + (max_re - min_re) * (windowWidth/2) / windowWidth;
-                        double ci = min_im + (max_im - min_im) * (windowHeight/2) / windowHeight;
-
+                        // double cr = min_re + (max_re - min_re) * (windowWidth/2) / windowWidth;
+                        // double ci = min_im + (max_im - min_im) * (windowHeight/2) / windowHeight;
+// 
                         // zoon
-                        double tminr = cr - (max_re - min_re) / 2 / z;
-                        max_re = cr + (max_re - min_re) / 2 / z;
-                        min_re = tminr;
-
-                        double tmini = ci - (max_im - min_im) / 2 / z;
-                        max_im = ci + (max_im - min_im) / 2 / z;
-                        min_im = tmini;
-                    };
-                    if (e.key.code == sf::Keyboard::Q) {zoom_x(1.0 / 2); zoom /= 2;}
-                    if (e.key.code == sf::Keyboard::E) {zoom_x(2); ; zoom *= 2;}
-                }
-                if (e.key.code == sf::Keyboard::M) std::cout << manuel() << std::endl;
-                if (e.key.code == sf::Keyboard::C) std::cout << vecClrToStr(colorPalett->first, colorPalett->second) << std::endl;
-                if (e.key.code == sf::Keyboard::Z && colors.size() > 1) {
-                    if (colorPalett == colors.begin()) 
-                        colorPalett = colorPalettEnd; 
-                    else
-                        colorPalett--;
-                }
-                if (e.key.code == sf::Keyboard::X && colors.size() > 1) {
-                    if (colorPalett == colorPalettEnd)
-                        colorPalett = colors.begin();
-                    else
-                        colorPalett++;
-                }
-            }
-            if (e.type == sf::Event::MouseButtonPressed){
-                auto zoom_x = [&](double z){
+                        // double tminr = cr - (max_re - min_re) / 2 / z;
+                        // max_re = cr + (max_re - min_re) / 2 / z;
+                        // min_re = tminr;
+// 
+                        // double tmini = ci - (max_im - min_im) / 2 / z;
+                        // max_im = ci + (max_im - min_im) / 2 / z;
+                        // min_im = tmini;
+                    // };
+                    // if (e.key.code == sf::Keyboard::Q) {zoom_x(1.0 / 2); zoom /= 2;}
+                    // if (e.key.code == sf::Keyboard::E) {zoom_x(2); ; zoom *= 2;}
+                // }
+                // if (e.key.code == sf::Keyboard::M) std::cout << manuel() << std::endl;
+                // if (e.key.code == sf::Keyboard::C) std::cout << vecClrToStr(colorPalett->first, colorPalett->second) << std::endl;
+                // if (e.key.code == sf::Keyboard::Z && colors.size() > 1) {
+                    // if (colorPalett == colors.begin()) 
+                        // colorPalett = colorPalettEnd; 
+                    // else
+                        // colorPalett--;
+                // }
+                // if (e.key.code == sf::Keyboard::X && colors.size() > 1) {
+                    // if (colorPalett == colorPalettEnd)
+                        // colorPalett = colors.begin();
+                    // else
+                        // colorPalett++;
+                // }
+            // }
+            // if (e.type == sf::Event::MouseButtonPressed){
+                // auto zoom_x = [&](double z){
                     // mouse point will be new center point
-                    double cr = min_re + (max_re - min_re) * e.mouseButton.x / windowWidth;
-                    double ci = min_im + (max_im - min_im) * e.mouseButton.y / windowHeight;
-
+                    // double cr = min_re + (max_re - min_re) * e.mouseButton.x / windowWidth;
+                    // double ci = min_im + (max_im - min_im) * e.mouseButton.y / windowHeight;
+// 
                     // zoon
-                    double tminr = cr - (max_re - min_re) / 2 / z;
-                    max_re = cr + (max_re - min_re) / 2 / z;
-                    min_re = tminr;
-
-                    double tmini = ci - (max_im - min_im) / 2 / z;
-                    max_im = ci + (max_im - min_im) / 2 / z;
-                    min_im = tmini;
-                };
-                if (e.mouseButton.button == sf::Mouse::Left) {zoom_x(5); ; zoom *= 5;}
-                if (e.mouseButton.button == sf::Mouse::Right) {zoom_x(1.0 / 5); zoom /= 5;}
-            }
-        }
-        window.clear();
-        draw(&image, colorPalett->second, windowWidth, windowHeight);
-        texture.loadFromImage(image);
-        sprite.setTexture(texture);
-        window.draw(sprite);
-        char str[100];
-        sprintf(str, "max_iter: %d\nzoom:x%2.2lf", max_iter, zoom);
-        text.setString(str);
-        window.draw(text);
-        window.display();
-    }
+                    // double tminr = cr - (max_re - min_re) / 2 / z;
+                    // max_re = cr + (max_re - min_re) / 2 / z;
+                    // min_re = tminr;
+// 
+                    // double tmini = ci - (max_im - min_im) / 2 / z;
+                    // max_im = ci + (max_im - min_im) / 2 / z;
+                    // min_im = tmini;
+                // };
+                // if (e.mouseButton.button == sf::Mouse::Left) {zoom_x(5); ; zoom *= 5;}
+                // if (e.mouseButton.button == sf::Mouse::Right) {zoom_x(1.0 / 5); zoom /= 5;}
+            // }
+        // }
+        // window.clear();
+        // draw(&image, colorPalett->second, windowWidth, windowHeight);
+        // texture.loadFromImage(image);
+        // sprite.setTexture(texture);
+        // window.draw(sprite);
+        // char str[100];
+        // sprintf(str, "max_iter: %d\nzoom:x%2.2lf", max_iter, zoom);
+        // text.setString(str);
+        // window.draw(text);
+        // window.display();
+    // }
+    return 0;
 }

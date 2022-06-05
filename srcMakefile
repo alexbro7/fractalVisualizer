@@ -29,10 +29,28 @@ UNAME = $(shell uname)
 ARM = $(shell uname -m)
 
 
+ifeq ($(UNAME), Darwin)
+	ifeq ($(ARM), x86_64)
 $(NAME):
 			@echo "$(GREEN)Compilation ${CLR_RMV}of ${YELLOW}$(NAME) ${CLR_RMV}..."
-			@${CC} ${MACARM_FLAGS} -o ${NAME} ${SRCS}
+			${CC} ${MACARM_FLAGS} -o ${NAME} ${SRCS}
 			@echo "$(GREEN)$(NAME) created[0m ✔️"
+	else
+$(NAME):
+			@echo "$(GREEN)Compilation ${CLR_RMV}of ${YELLOW}$(NAME) ${CLR_RMV}..."
+			${CC} ${MACARM_FLAGS} -o ${NAME} ${SRCS}
+			@echo "$(GREEN)$(NAME) created[0m ✔️"
+endif
+endif
+
+ifeq ($(UNAME), Linux)))
+$(NAME):
+			@echo "$(GREEN)Compilation ${CLR_RMV}of ${YELLOW}$(NAME) ${CLR_RMV}..."
+			g++ -c srcs/main.cpp -I include/ 
+g++ main.o -o sfml-app -L lib/ -lsfml-graphics -lsfml-window -lsfml-system
+export LD_LIBRARY_PATH=lib/ && ./sfml-app
+			@echo "$(GREEN)$(NAME) created[0m ✔️"
+endif
 
 all:		${NAME}
 
