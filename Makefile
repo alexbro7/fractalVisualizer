@@ -1,7 +1,7 @@
 NAME        := fractalVisualizer
 CC         := c++
-MACOS_FLAGS    := -std=c++11 -Wall -Werror -Wextra -W -I/usr/local/Cellar/sfml/2.5.1_1/include/ -L/usr/local/Cellar/sfml/2.5.1_1/lib -lsfml-graphics -lsfml-window -lsfml-system
-MACARM_FLAGS    := -std=c++11 -Wall -Werror -Wextra -W -I/opt/homebrew/Cellar/sfml/2.5.1_1/include/ -L/opt/homebrew/Cellar/sfml/2.5.1_1/lib -lsfml-graphics -lsfml-window -lsfml-system
+MACOS_FLAGS    := -std=c++11 -I/usr/local/Cellar/sfml/2.5.1_1/include/ -L/usr/local/Cellar/sfml/2.5.1_1/lib -lsfml-graphics -lsfml-window -lsfml-system # -Wall -Werror -Wextra -W
+MACARM_FLAGS   := -std=c++11 -I/opt/homebrew/Cellar/sfml/2.5.1_1/include/ -L/opt/homebrew/Cellar/sfml/2.5.1_1/lib -lsfml-graphics -lsfml-window -lsfml-system # -Wall -Werror -Wextra -W
 LINUX_FLAGS    :=
 
 ################################################################################

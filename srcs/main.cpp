@@ -1,3 +1,6 @@
+//░▒▓██▓▒░
+//【】 〔〕 〖〗 〚〛
+// ▲►▼◄ ◣◢◤◥〓
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -6,18 +9,17 @@
 #include <cstring>
 #include <SFML/Graphics.hpp>
 #include <thread>
-
-// ░▒▒▓████████████████▓▒▒░
-// ░▒▒▓█ TEXT EFFECTS █▓▒▒░
-// ░▒▒▓████████████████▓▒▒░
+//░▒▓██████████████▓▒░
+//░▒▓ TEXT EFFECTS ▓▒░
+//░▒▓██████████████▓▒░
 #define SPL	    "\033[0m"  // effect/color reset
 #define BLD	    "\033[1m"  // bold 
 #define UL      "\033[4m"  // underline
 #define FLH     "\033[5m"  // bold 
 #define OL      "\033[7m"  // overline
-// ░▒▒▓███████████████▓▒▒░
-// ░▒▒▓█ TEXT COLORS █▓▒▒░
-// ░▒▒▓███████████████▓▒▒░
+//░▒▓███████████████▓▒░
+//░▒▓█ TEXT COLORS █▓▒░
+//░▒▓███████████████▓▒░
 #define CN      "\033[30m" // color_gray
 #define CR      "\033[31m" // color_red
 #define CG      "\033[32m" // color_green
@@ -34,16 +36,40 @@
 #define OY      "\033[43m" // overline_yellow
 #define OC      "\033[46m" // overline_cyan
 #define OW      "\033[47m" // overline_white
-
+//░▒▓█|A DEPLACÉ|█▓▒░
 int max_iter = 128;
 double zoom = 1.0;
 double min_re = -2.5, max_re = 1;
 double min_im = -1, max_im = 1;
-void    displayManual() {
-    std::cout << BLD OW CN "CONTROL MANUAL:" << SPL << ON << CW << " " << std::endl;
-    for (std::string::size_type s = 0; s < 19; s++) std::cout << " "; std::cout << std::endl;
+/*░▒▓█████████▓▒░
+  ░▒▓█ UTILS █▓▒░
+  ░▒▓█████████▓▒░*/
+bool    error_msg(const std::string& s) {std::cerr << s << std::endl; return false;}
+bool    isBlank(const char& c) {return (c == ' ' || c == '\n' || c == '\t' || c == '\v' || c == '\f' || c == '\r') ? true : false;}
+bool    isDigit(const char& c) {return (c >= '0' && c <= '9') ? true : false;}
+bool    isInteger(const char* s) {for (std::string::size_type i = 0; i < strlen(s); i++) if (!isDigit(s[i])) return false; return true;}
+int     integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i) return r; else i /= 10;}}
+
+/*░▒▓████████████████████▓▒░
+  ░▒▓█ STRING GENERATOR █▓▒░
+  ░▒▓████████████████████▓▒░*/
+const std::string    displayManual(void) {
+    std::string r = "";
+    r += ON"                              \n";
+    r += ON OW BLD" CONTROLS MANUAL" ON CW"=                   \n";
+    r +=            "                                                 \n";
+    r += OW CN BLD"[E/Q]" ON CW "=" SPL ON    " Zoom x 2/0.5                   \n";
+    r +=                 "                                     \n";
+    r +=           OW CN BLD"[R/F]" ON CW "=" SPL ON " Iterations +/- x                   \n";
+    r +=                 "                                     \n";
+    // for (std::string::size_type s = 0; s < 19; s++) otmp += " "; std::cout << otmp << SPL << std::endl; //otmp.clear();
+    // std::cout << "COUCOU" << std::endl;
+    // std::cout << otmp << std::endl;
+    // std::cout << "COUCOU" << std::endl;
+    // r += OW;
     // r += " Z/X:\t\tcolors palett = previous/next\n";
-    std::cout << BLD OW CN " " << "COLOR PALETTE" << "lol" << std::endl << std::endl;
+    return r;
+    // std::cout << BLD OW CN " " << "COLOR PALETTE" << "lol" << std::endl << std::endl;
     // r+= " " UL ".:" MOB CN BLD "[" CR "E" CN "]/[" CG "Q" CN "]" SPL MA ">\t";r+= "zoom" CR "2" MA BLD "/" SPL CG  "0.5" SPL "\n";
     // r+= MOB "                  ";r+= SPL BLD CG ":.";r+= SPL"\n";
     // r += OG " :" OW CN BLD "[" CB "Z" CN "]/[" CC "X" CN "]" SPL CW ">\t" CB "previous" CW BLD "/" SPL CC  "next" SPL  " color palette\n" SPL;
@@ -64,18 +90,6 @@ void    displayManual() {
     // r+=SPL"origin point ◄/►/▲/▼\n";
     //Z/X
 }
-
-
-bool error_msg(const std::string& s) {std::cerr << s << std::endl; return false;}
-
-bool isBlank(const char& c) {return (c == ' ' || c == '\n' || c == '\t' || c == '\v' || c == '\f' || c == '\r') ? true : false;}
-
-bool isDigit(const char& c) {return (c >= '0' && c <= '9') ? true : false;}
-
-bool isInteger(const char* s) {for (std::string::size_type i = 0; i < strlen(s); i++) if (!isDigit(s[i])) return false; return true;}
-
-int integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i) return r; else i /= 10;}}
-
 const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
     std::string s(BLD ON CW " "); s += n + ":"; for (std::string::size_type a = 18; a > n.length(); a--) s += " "; s+= SPL "\n";
     s += ON;
@@ -209,96 +223,96 @@ void draw(sf::Image *image, std::vector<sf::Color> colors, const int &windowWidt
 /**/
 
 int main(int ac, char **av){
-    if (ac != 2) {std::cerr << "Error: invalid number of arguments. Use \"./fractol <window's width>\"" << std::endl; return 1;}
-    if (!isInteger(av[1])) {std::cerr << "Error: invalid width." << std::endl; return 1;}
-    int windowWidth = std::atoi(av[1]), windowHeight = windowWidth/16*9;
-    if (windowWidth < 16) {std::cerr << "Error: Window's width must be >= 16." << std::endl; return 1;}
-    sf::RenderWindow    window(sf::VideoMode(windowWidth, windowHeight), "Mandelbrot"); window.setFramerateLimit(60); 
-    sf::Image image; image.create(windowWidth,windowHeight);
-    sf::Texture texture;
-    sf::Sprite sprite;
+    // if (ac != 2) {std::cerr << "Error: invalid number of arguments. Use \"./fractol <window's width>\"" << std::endl; return 1;}
+    // if (!isInteger(av[1])) {std::cerr << "Error: invalid width." << std::endl; return 1;}
+    // int windowWidth = std::atoi(av[1]), windowHeight = windowWidth/16*9;
+    // if (windowWidth < 16) {std::cerr << "Error: Window's width must be >= 16." << std::endl; return 1;}
+    // sf::RenderWindow    window(sf::VideoMode(windowWidth, windowHeight), "Mandelbrot"); window.setFramerateLimit(60); 
+    // sf::Image image; image.create(windowWidth,windowHeight);
+    // sf::Texture texture;
+    // sf::Sprite sprite;
     // sf::Font font; font.loadFromFile("Helvetica.ttc");
     // sf::Text text; text.setFont(font); text.setCharacterSize(24); text.setFillColor(sf::Color::Red);
-    std::map<const std::string, std::vector<sf::Color> > colors = loadColors();
-    if (colors.empty()) return 1;
-    std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalett = colors.begin();
-    std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalettEnd = colors.end(); if (colors.size() > 1) colorPalettEnd--;
-    displayManual(); std::cout << std::endl;
+    // std::map<const std::string, std::vector<sf::Color> > colors = loadColors();
+    // if (colors.empty()) return 1;
+    // std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalett = colors.begin();
+    // std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalettEnd = colors.end(); if (colors.size() > 1) colorPalettEnd--;
+    std::cout << displayManual() << std::endl;
 return 0;
-    while (window.isOpen()){
-        sf::Event e;
-        while (window.pollEvent(e)){
-            if (e.type == sf::Event::Closed || (e.type == sf::Event::KeyPressed && e.key.code == sf::Keyboard::Escape)) window.close();
-            if (e.type == sf::Event::KeyPressed){
-                if (e.key.code == sf::Keyboard::A) {double w = (max_re - min_re) * 0.3; min_re -= w; max_re -= w;}
-                if (e.key.code == sf::Keyboard::D) {double w = (max_re - min_re) * 0.3; min_re += w; max_re += w;}
-                if (e.key.code == sf::Keyboard::W) {double h = (max_im - min_im) * 0.3; min_im -= h; max_im -= h;}
-                if (e.key.code == sf::Keyboard::S) {double h = (max_im - min_im) * 0.3; min_im += h; max_im += h;}
-                if (e.key.code == sf::Keyboard::F) {max_iter -= 10; if (max_iter < 1) max_iter = 1;}
-                if (e.key.code == sf::Keyboard::R) {max_iter += 10; if (max_iter < 1) max_iter = 1;}
-                if (e.key.code == sf::Keyboard::Q || e.key.code == sf::Keyboard::E){
-                    auto zoom_x = [&](double z){
-                        // mouse point will be new center point
-                        double cr = min_re + (max_re - min_re) * (windowWidth/2) / windowWidth;
-                        double ci = min_im + (max_im - min_im) * (windowHeight/2) / windowHeight;
+//     while (window.isOpen()){
+//         sf::Event e;
+//         while (window.pollEvent(e)){
+//             if (e.type == sf::Event::Closed || (e.type == sf::Event::KeyPressed && e.key.code == sf::Keyboard::Escape)) window.close();
+//             if (e.type == sf::Event::KeyPressed){
+//                 if (e.key.code == sf::Keyboard::A) {double w = (max_re - min_re) * 0.3; min_re -= w; max_re -= w;}
+//                 if (e.key.code == sf::Keyboard::D) {double w = (max_re - min_re) * 0.3; min_re += w; max_re += w;}
+//                 if (e.key.code == sf::Keyboard::W) {double h = (max_im - min_im) * 0.3; min_im -= h; max_im -= h;}
+//                 if (e.key.code == sf::Keyboard::S) {double h = (max_im - min_im) * 0.3; min_im += h; max_im += h;}
+//                 if (e.key.code == sf::Keyboard::F) {max_iter -= 10; if (max_iter < 1) max_iter = 1;}
+//                 if (e.key.code == sf::Keyboard::R) {max_iter += 10; if (max_iter < 1) max_iter = 1;}
+//                 if (e.key.code == sf::Keyboard::Q || e.key.code == sf::Keyboard::E){
+//                     auto zoom_x = [&](double z){
+//                         // mouse point will be new center point
+//                         double cr = min_re + (max_re - min_re) * (windowWidth/2) / windowWidth;
+//                         double ci = min_im + (max_im - min_im) * (windowHeight/2) / windowHeight;
 
-                        // zoon
-                        double tminr = cr - (max_re - min_re) / 2 / z;
-                        max_re = cr + (max_re - min_re) / 2 / z;
-                        min_re = tminr;
+//                         // zoon
+//                         double tminr = cr - (max_re - min_re) / 2 / z;
+//                         max_re = cr + (max_re - min_re) / 2 / z;
+//                         min_re = tminr;
 
-                        double tmini = ci - (max_im - min_im) / 2 / z;
-                        max_im = ci + (max_im - min_im) / 2 / z;
-                        min_im = tmini;
-                    };
-                    if (e.key.code == sf::Keyboard::Q) {zoom_x(1.0 / 2); zoom /= 2;}
-                    if (e.key.code == sf::Keyboard::E) {zoom_x(2); ; zoom *= 2;}
-                }
-                if (e.key.code == sf::Keyboard::M) displayManual(); std::cout << std::endl;
-                if (e.key.code == sf::Keyboard::Z && colors.size() > 1) {
-                    if (colorPalett == colors.begin()) 
-                        colorPalett = colorPalettEnd; 
-                    else
-                        colorPalett--;
-                    std::cout << vecClrToStr(colorPalett->first, colorPalett->second) << std::endl;
-                }
-                if (e.key.code == sf::Keyboard::X && colors.size() > 1) {
-                    if (colorPalett == colorPalettEnd)
-                        colorPalett = colors.begin();
-                    else
-                        colorPalett++;
-                    std::cout << vecClrToStr(colorPalett->first, colorPalett->second) << std::endl;
-                }
-            }
-            if (e.type == sf::Event::MouseButtonPressed){
-                auto zoom_x = [&](double z){
-                    // mouse point will be new center point
-                    double cr = min_re + (max_re - min_re) * e.mouseButton.x / windowWidth;
-                    double ci = min_im + (max_im - min_im) * e.mouseButton.y / windowHeight;
+//                         double tmini = ci - (max_im - min_im) / 2 / z;
+//                         max_im = ci + (max_im - min_im) / 2 / z;
+//                         min_im = tmini;
+//                     };
+//                     if (e.key.code == sf::Keyboard::Q) {zoom_x(1.0 / 2); zoom /= 2;}
+//                     if (e.key.code == sf::Keyboard::E) {zoom_x(2); ; zoom *= 2;}
+//                 }
+//                 if (e.key.code == sf::Keyboard::M) displayManual(); std::cout << std::endl;
+//                 if (e.key.code == sf::Keyboard::Z && colors.size() > 1) {
+//                     if (colorPalett == colors.begin()) 
+//                         colorPalett = colorPalettEnd; 
+//                     else
+//                         colorPalett--;
+//                     std::cout << vecClrToStr(colorPalett->first, colorPalett->second) << std::endl;
+//                 }
+//                 if (e.key.code == sf::Keyboard::X && colors.size() > 1) {
+//                     if (colorPalett == colorPalettEnd)
+//                         colorPalett = colors.begin();
+//                     else
+//                         colorPalett++;
+//                     std::cout << vecClrToStr(colorPalett->first, colorPalett->second) << std::endl;
+//                 }
+//             }
+//             if (e.type == sf::Event::MouseButtonPressed){
+//                 auto zoom_x = [&](double z){
+//                     // mouse point will be new center point
+//                     double cr = min_re + (max_re - min_re) * e.mouseButton.x / windowWidth;
+//                     double ci = min_im + (max_im - min_im) * e.mouseButton.y / windowHeight;
 
-                    // zoon
-                    double tminr = cr - (max_re - min_re) / 2 / z;
-                    max_re = cr + (max_re - min_re) / 2 / z;
-                    min_re = tminr;
+//                     // zoon
+//                     double tminr = cr - (max_re - min_re) / 2 / z;
+//                     max_re = cr + (max_re - min_re) / 2 / z;
+//                     min_re = tminr;
 
-                    double tmini = ci - (max_im - min_im) / 2 / z;
-                    max_im = ci + (max_im - min_im) / 2 / z;
-                    min_im = tmini;
-                };
-                if (e.mouseButton.button == sf::Mouse::Left) {zoom_x(5); ; zoom *= 5;}
-                if (e.mouseButton.button == sf::Mouse::Right) {zoom_x(1.0 / 5); zoom /= 5;}
-            }
-        }
-        window.clear();
-        draw(&image, colorPalett->second, windowWidth, windowHeight);
-        texture.loadFromImage(image);
-        sprite.setTexture(texture);
-        window.draw(sprite);
-        char str[100];
-        sprintf(str, "max_iter: %d\nzoom:x%2.2lf", max_iter, zoom);
-        // text.setString(str);
-        // window.draw(text);
-        window.display();
-    }
-    return 0;
+//                     double tmini = ci - (max_im - min_im) / 2 / z;
+//                     max_im = ci + (max_im - min_im) / 2 / z;
+//                     min_im = tmini;
+//                 };
+//                 if (e.mouseButton.button == sf::Mouse::Left) {zoom_x(5); ; zoom *= 5;}
+//                 if (e.mouseButton.button == sf::Mouse::Right) {zoom_x(1.0 / 5); zoom /= 5;}
+//             }
+//         }
+//         window.clear();
+//         draw(&image, colorPalett->second, windowWidth, windowHeight);
+//         texture.loadFromImage(image);
+//         sprite.setTexture(texture);
+//         window.draw(sprite);
+//         char str[100];
+//         sprintf(str, "max_iter: %d\nzoom:x%2.2lf", max_iter, zoom);
+//         // text.setString(str);
+//         // window.draw(text);
+//         window.display();
+//     }
+//     return 0;
 }
