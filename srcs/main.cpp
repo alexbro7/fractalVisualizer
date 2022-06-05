@@ -7,13 +7,17 @@
 #include <SFML/Graphics.hpp>
 #include <thread>
 
-//TEXT EFFECTS
+// ░▒▒▓████████████████▓▒▒░
+// ░▒▒▓█ TEXT EFFECTS █▓▒▒░
+// ░▒▒▓████████████████▓▒▒░
 #define SPL	    "\033[0m"  // effect/color reset
 #define BLD	    "\033[1m"  // bold 
 #define UL      "\033[4m"  // underline
 #define FLH     "\033[5m"  // bold 
 #define OL      "\033[7m"  // overline
-//TEXT COLORS
+// ░▒▒▓███████████████▓▒▒░
+// ░▒▒▓█ TEXT COLORS █▓▒▒░
+// ░▒▒▓███████████████▓▒▒░
 #define CN      "\033[30m" // color_gray
 #define CR      "\033[31m" // color_red
 #define CG      "\033[32m" // color_green
@@ -35,10 +39,11 @@ int max_iter = 128;
 double zoom = 1.0;
 double min_re = -2.5, max_re = 1;
 double min_im = -1, max_im = 1;
-
 void    displayManual() {
-    std::cout << BLD OW CN " " << ".:CONTROL MANUAL:" << SPL << ON << CW << "." << "\n";
-    // r+= MOB"                  ";r+= SPL BLD MA ":.";r+= SPL"\n";
+    std::cout << BLD OW CN "CONTROL MANUAL:" << SPL << ON << CW << " " << std::endl;
+    for (std::string::size_type s = 0; s < 19; s++) std::cout << " "; std::cout << std::endl;
+    // r += " Z/X:\t\tcolors palett = previous/next\n";
+    std::cout << BLD OW CN " " << "COLOR PALETTE" << "lol" << std::endl << std::endl;
     // r+= " " UL ".:" MOB CN BLD "[" CR "E" CN "]/[" CG "Q" CN "]" SPL MA ">\t";r+= "zoom" CR "2" MA BLD "/" SPL CG  "0.5" SPL "\n";
     // r+= MOB "                  ";r+= SPL BLD CG ":.";r+= SPL"\n";
     // r += OG " :" OW CN BLD "[" CB "Z" CN "]/[" CC "X" CN "]" SPL CW ">\t" CB "previous" CW BLD "/" SPL CC  "next" SPL  " color palette\n" SPL;
@@ -58,7 +63,6 @@ void    displayManual() {
     // r += " A/D/windowWidth/S:\t";
     // r+=SPL"origin point ◄/►/▲/▼\n";
     //Z/X
-    // r += " Z/X:\t\tcolors palett = previous/next\n";
 }
 
 
