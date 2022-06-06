@@ -50,9 +50,13 @@ int     integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i)
 ░▒▓█ STRING GENERATOR █▓▒░
 ░▒▓████████████████████▓▒░*/
 const std::string    displayManual(void) {
-    std::string r = "";
-    r += RST CG "░▒▓█";r += OG CW "CONTROLS ";r += RST UL CG "█▓▒░";r+= RST "\n";
-    r += " " OR CN "[" CW "E" CN "]" RST CW " / " OC CN "[" CW "Q" CN "]" RST CW " =" RST " Zoom x " BLD UL CR "2" RST CW " / " CC "0.5\n";r+= RST "\n";
+    std::string r = (RST CG "░▒▓" OG CW " CONTROLS " RST UL CG "▓▒░" RST "\n");
+
+    r += " " OR CN "[" CW "E" CN "] ";
+    r += RST CW "/ ";
+    r += OC CN "[" CW "Q" CN "]";
+    r += RST CW " =" RST " Zoom x " BLD UL CR "2" RST CW " / " CC "0.5\n";r+= RST "\n";
+
     r += RST CG "░▒▓███████████▓▒░\n";r+= RST;
     // r += OW CN BLD"[R/F]" ON CW"=" RST ON" Iterations " BLD UL"+/-" RST ON " x                   \n";
     // r+= "                                     \n";
