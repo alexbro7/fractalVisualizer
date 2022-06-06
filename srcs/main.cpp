@@ -52,25 +52,25 @@ int     integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i)
 const std::string    displayManual(void) {
     std::string r = (RST CG "░▒▓" OG CY " CONTROLS " RST UL CG "▓▒░" RST "\n");
 
-    r += OR CN "[" CW "E" CN "]";
+    r += OR CW "[R]";
     r += RST CW "/";
-    r += OC CN "[" CW "Q" CN "]";
+    r += OC CW "[F]";
     r += RST CW " =" RST " iteration " BLD UL CR "+" RST CW "-" CW "1\n"; r+= RST "\n";
 
-    r += OR CN "[" CW "E" CN "]";
+    r += OR CW "[E]";
     r += RST CW "/";
-    r += OC CN "[" CW "Q" CN "]";
+    r += OC CW "[Q]";
     r += RST CW " =" RST " Zoom x " BLD UL CR "2" RST CW "/" CC "0.5\n"; r+= RST "\n";
 
-    r += OP CN "[" CW "A" CN "]";
+    r += OG CW "[D]";
     r += RST CW "/";
-    r += OG CN "[" CW "D" CN "]";
+    r += OP CW "[A]";
     r += RST CW "/";
-    r += OR CN "[" CW "W" CN "]";
+    r += OR CW "[W]";
     r += RST CW "/";
-    r += OC CN "[" CW "S" CN "]";
+    r += OC CW "[S]";
     r += RST CW " = View origin "
-    ;r += CP "→";r += CW "/";r += CG "←";r += CW "/";r += CC "↑";r += CW "/";r += CR "↓"; r+= RST "\n";
+    ;r += CG "→";r += CW "/";r += CP "←";r += CW "/";r += CC "↑";r += CW "/";r += CR "↓"; r+= RST "\n";
 
     r += RST CG "░▒▓███████████▓▒░\n";r+= RST;
 
