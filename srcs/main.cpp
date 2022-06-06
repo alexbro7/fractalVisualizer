@@ -52,7 +52,7 @@ int     integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i)
 const std::string    displayManual(void) {
     std::string r = "";
     r += RST BLD UL CW "░▒▓█";r += RST BLD OW CN "CONTROLS MANUAL";r += RST BLD UL CW "█▓▒░";r+= RST "\n\n";
-    r += "    " OW BLD CN "[E/Q]" RST CW " =" RST " Zoom x " BLD UL "2/0.5\n";r+= RST "\n";
+    r += " " OW BLD CN "[E/Q]" RST CW " =" RST " Zoom x " BLD UL "2/0.5\n";r+= RST "\n";
     r += RST BLD UL CW "░▒▓█████████████████▓▒░";r+= RST;
     // r += OW CN BLD"[R/F]" ON CW"=" RST ON" Iterations " BLD UL"+/-" RST ON " x                   \n";
     // r+= "                                     \n";
