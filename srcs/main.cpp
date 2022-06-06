@@ -44,52 +44,37 @@ bool    isBlank(const char& c) {return (c == ' ' || c == '\n' || c == '\t' || c 
 bool    isDigit(const char& c) {return (c >= '0' && c <= '9') ? true : false;}
 bool    isInteger(const char* s) {for (std::string::size_type i = 0; i < strlen(s); i++) if (!isDigit(s[i])) return false; return true;}
 int     integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i) return r; else i /= 10;}}
-//【 】〔〕 〖〗 〚〛← ↑ → ↓
+//【 】〔〕 〖〗 〚〛
 /*
 ░▒▓████████████████████▓▒░
 ░▒▓█ STRING GENERATOR █▓▒░
 ░▒▓████████████████████▓▒░*/
 const std::string    displayManual(void) {
-    std::string r = (RST CG "░▒▓" OG CW " CONTROLS " RST UL CG "▓▒░" RST "\n");
+    std::string r = (RST CG "░▒▓" OG CY " CONTROLS " RST UL CG "▓▒░" RST "\n");
 
-    r += " " OR CN "[" CW "E" CN "] ";
-    r += RST CW "/ ";
+    r += OR CN "[" CW "E" CN "]";
+    r += RST CW "/";
     r += OC CN "[" CW "Q" CN "]";
-    r += RST CW " =" RST " Zoom x " BLD UL CR "2" RST CW " / " CC "0.5\n";r+= RST "\n";
+    r += RST CW " =" RST " iteration " BLD UL CR "+" RST CW "-" CW "1\n"; r+= RST "\n";
+
+    r += OR CN "[" CW "E" CN "]";
+    r += RST CW "/";
+    r += OC CN "[" CW "Q" CN "]";
+    r += RST CW " =" RST " Zoom x " BLD UL CR "2" RST CW "/" CC "0.5\n"; r+= RST "\n";
+
+    r += OP CN "[" CW "A" CN "]";
+    r += RST CW "/";
+    r += OG CN "[" CW "D" CN "]";
+    r += RST CW "/";
+    r += OR CN "[" CW "W" CN "]";
+    r += RST CW "/";
+    r += OC CN "[" CW "S" CN "]";
+    r += RST CW " = View origin "
+    ;r += CP "→";r += CW "/";r += CG "←";r += CW "/";r += CC "↑";r += CW "/";r += CR "↓"; r+= RST "\n";
 
     r += RST CG "░▒▓███████████▓▒░\n";r+= RST;
-    // r += OW CN BLD"[R/F]" ON CW"=" RST ON" Iterations " BLD UL"+/-" RST ON " x                   \n";
-    // r+= "                                     \n";
-    // r += OW CN BLD"[A/D/W/S]" ON CW"=" RST ON" Window's origin " BLD UL"←/→/↑/↓\n";
-    // r += RST;
+
     return r;
-    // r +=                 "                                     \n";
-    // for (std::string::size_type s = 0; s < 19; s++) otmp += " "; std::cout << otmp << RST << std::endl; //otmp.clear();
-    // std::cout << "COUCOU" << std::endl;
-    // std::cout << otmp << std::endl;
-    // std::cout << "COUCOU" << std::endl;
-    // r += OW;
-    // r += " Z/X:\t\tcolors palett = previous/next\n";
-    // std::cout << BLD OW CN " " << "COLOR PALETTE" << "lol" << std::endl << std::endl;
-    // r+= " " UL ".:" MOB CN BLD "[" CR "E" CN "]/[" CG "Q" CN "]" RST MA ">\t";r+= "zoom" CR "2" MA BLD "/" RST CG  "0.5" RST "\n";
-    // r+= MOB "                  ";r+= RST BLD CG ":.";r+= RST"\n";
-    // r += OG " :" OW CN BLD "[" CB "Z" CN "]/[" CC "X" CN "]" RST CW ">\t" CB "previous" CW BLD "/" RST CC  "next" RST  " color palette\n" RST;
-    // r += OG "                 ";r+= RST BLD CG ":.";r+= RST"\n";
-    // r += OG " :" OW CR BLD "[ESC]" RST CW ">\t" RST CR "Exit program.\n";
-    // r += OG "                 ";r+= RST BLD CG ":.";r+= RST"\n";
-    // LEFTCLIC 
-    // r += " left clic:\twindow's center point = clicked point\n\t\tzoom x 5\n";
-    // RIGHTCLIC
-    // r += " rightclic:\tzoom x 0.2\n";
-    // ESC
-    // E/Q
-    // r += "[E/Q]:\t\tzoom x 2/0.5\n";
-    // R/F
-    // r+=" [R/F]:\t\titeration +/- 1\n";
-    // A/D/windowWidth/S
-    // r += " A/D/windowWidth/S:\t";
-    // r+=RST"origin point ◄/►/▲/▼\n";
-    //Z/X
 }
 
 const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
