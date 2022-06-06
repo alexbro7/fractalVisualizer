@@ -62,15 +62,15 @@ const std::string    displayManual(void) {
     r += OC CW "[Q]";
     r += RST CW " =" RST " Zoom x " BLD UL CR "2" RST CW "/" CC "0.5\n"; r+= RST "\n";
 
-    r += OG CW "[D]";
-    r += RST CW "/";
-    r += OP CW "[A]";
-    r += RST CW "/";
     r += OR CW "[W]";
     r += RST CW "/";
     r += OC CW "[S]";
+    r += RST CW "/";
+    r += OG CW "[D]";
+    r += RST CW "/";
+    r += OP CW "[A]";
     r += RST CW " = View origin "
-    ;r += CG "→";r += CW "/";r += CP "←";r += CW "/";r += CC "↑";r += CW "/";r += CR "↓"; r+= RST "\n";
+    ;r += CG ;r += CC "↑";r += CW "/";r += CR "↓";"→";r += CW "/";r += CW "/"r += CP "←"; r+= RST "\n";
 
     r += RST CG "░▒▓███████████▓▒░\n";r+= RST;
 
