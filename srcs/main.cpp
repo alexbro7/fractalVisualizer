@@ -51,9 +51,9 @@ int     integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i)
 ░▒▓████████████████████▓▒░*/
 const std::string    displayManual(void) {
     std::string r = "";
-    r += RST BLD UL CW "░▒▓█";r += RST BLD OW CN "CONTROLS MANUAL";r += RST BLD UL CW "█▓▒░";r+= RST "\n\n";
-    r += " " OW BLD CN "[E/Q]" RST CW " =" RST " Zoom x " BLD UL "2/0.5\n";r+= RST "\n";
-    r += RST BLD UL CW "░▒▓█████████████████▓▒░";r+= RST;
+    r += RST CG "░▒▓█";r += OG CW "CONTROLS ";r += RST UL CG "█▓▒░";r+= RST "\n";
+    r += " " OR CN "[" CW "E" CN "]" RST CW " / " OC CN "[" CW "Q" CN "]" RST CW " =" RST " Zoom x " BLD UL CR "2" RST CW " / " CC "0.5\n";r+= RST "\n";
+    r += RST CG "░▒▓███████████▓▒░\n";r+= RST;
     // r += OW CN BLD"[R/F]" ON CW"=" RST ON" Iterations " BLD UL"+/-" RST ON " x                   \n";
     // r+= "                                     \n";
     // r += OW CN BLD"[A/D/W/S]" ON CW"=" RST ON" Window's origin " BLD UL"←/→/↑/↓\n";

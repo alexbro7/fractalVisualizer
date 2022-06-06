@@ -32,7 +32,7 @@ ARM = $(shell uname -m)
 $(NAME):
 			@echo "$(GREEN)Compilation ${CLR_RMV}of ${YELLOW}$(NAME) ${CLR_RMV}..."
 			@${CC} ${MACARM_FLAGS} -o ${NAME} ${SRCS}
-			@echo "$(GREEN)$(NAME) created[0m ✔️"
+			@echo "$(NAME) $(CYAN)created[0m ✔️"
 
 all:		${NAME}
 
