@@ -1,6 +1,11 @@
-//░▒▓██▓▒░
-//【】 〔〕 〖〗 〚〛
+// ░▒▓█
+// █▓▒░
+//【】〔〕〖〗〚〛
+// █【█】█〔█〕█〖█〗█〚█〛█
+// 】【〕〔〗〖〛〚
+// █】█【█〕█〔█〗█〖█〛█〚█
 // ▲►▼◄ ◣◢◤◥〓
+//████████████████████████████████
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -9,14 +14,7 @@
 #include <cstring>
 #include <SFML/Graphics.hpp>
 #include <thread>
-//░▒▓██████████████▓▒░
-//░▒▓ TEXT EFFECTS ▓▒░
-//░▒▓██████████████▓▒░
-#define SPL	    "\033[0m"  // effect/color reset
-#define BLD	    "\033[1m"  // bold 
-#define UL      "\033[4m"  // underline
-#define FLH     "\033[5m"  // bold 
-#define OL      "\033[7m"  // overline
+
 //░▒▓███████████████▓▒░
 //░▒▓█ TEXT COLORS █▓▒░
 //░▒▓███████████████▓▒░
@@ -36,6 +34,15 @@
 #define OY      "\033[43m" // overline_yellow
 #define OC      "\033[46m" // overline_cyan
 #define OW      "\033[47m" // overline_white
+//░▒▓██████████████▓▒░
+//░▒▓ TEXT EFFECTS ▓▒░
+//░▒▓██████████████▓▒░
+#define BLD	    "\033[1m"  // bold 
+#define UL      "\033[4m"  // underline
+#define FLH     "\033[5m"  // bold 
+#define OL      "\033[7m"  // overline
+#define RST	    "\033[0m"  // effect/color reset
+
 //░▒▓█|A DEPLACÉ|█▓▒░
 int max_iter = 128;
 double zoom = 1.0;
@@ -49,33 +56,36 @@ bool    isBlank(const char& c) {return (c == ' ' || c == '\n' || c == '\t' || c 
 bool    isDigit(const char& c) {return (c >= '0' && c <= '9') ? true : false;}
 bool    isInteger(const char* s) {for (std::string::size_type i = 0; i < strlen(s); i++) if (!isDigit(s[i])) return false; return true;}
 int     integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i) return r; else i /= 10;}}
-
+//【 】〔〕 〖〗 〚〛← ↑ → ↓
 /*░▒▓████████████████████▓▒░
   ░▒▓█ STRING GENERATOR █▓▒░
   ░▒▓████████████████████▓▒░*/
 const std::string    displayManual(void) {
     std::string r = "";
-    r += ON"                              \n";
-    r += ON OW BLD" CONTROLS MANUAL" ON CW"=                   \n";
-    r +=            "                                                 \n";
-    r += OW CN BLD"[E/Q]" ON CW "=" SPL ON    " Zoom x 2/0.5                   \n";
-    r +=                 "                                     \n";
-    r +=           OW CN BLD"[R/F]" ON CW "=" SPL ON " Iterations +/- x                   \n";
-    r +=                 "                                     \n";
-    // for (std::string::size_type s = 0; s < 19; s++) otmp += " "; std::cout << otmp << SPL << std::endl; //otmp.clear();
+    r += ON"                                                        \n";
+    r += ON OW BLD"CONTROLS MANUAL" ON CW" =";r+= "             \n"; 
+    r += "                                           \n";
+    r += OW CN BLD"[E/Q]" ON CW " =" RST ON " Zoom x " BLD UL"2/0.5\n" RST ON;
+    r += "                                           \n";
+    // r += OW CN BLD"[R/F]" ON CW"=" RST ON" Iterations " BLD UL"+/-" RST ON " x                   \n";
+    // r+= "                                     \n";
+    // r += OW CN BLD"[A/D/W/S]" ON CW"=" RST ON" Window's origin " BLD UL"←/→/↑/↓\n";
+    // r += RST;
+    return r;
+    // r +=                 "                                     \n";
+    // for (std::string::size_type s = 0; s < 19; s++) otmp += " "; std::cout << otmp << RST << std::endl; //otmp.clear();
     // std::cout << "COUCOU" << std::endl;
     // std::cout << otmp << std::endl;
     // std::cout << "COUCOU" << std::endl;
     // r += OW;
     // r += " Z/X:\t\tcolors palett = previous/next\n";
-    return r;
     // std::cout << BLD OW CN " " << "COLOR PALETTE" << "lol" << std::endl << std::endl;
-    // r+= " " UL ".:" MOB CN BLD "[" CR "E" CN "]/[" CG "Q" CN "]" SPL MA ">\t";r+= "zoom" CR "2" MA BLD "/" SPL CG  "0.5" SPL "\n";
-    // r+= MOB "                  ";r+= SPL BLD CG ":.";r+= SPL"\n";
-    // r += OG " :" OW CN BLD "[" CB "Z" CN "]/[" CC "X" CN "]" SPL CW ">\t" CB "previous" CW BLD "/" SPL CC  "next" SPL  " color palette\n" SPL;
-    // r += OG "                 ";r+= SPL BLD CG ":.";r+= SPL"\n";
-    // r += OG " :" OW CR BLD "[ESC]" SPL CW ">\t" SPL CR "Exit program.\n";
-    // r += OG "                 ";r+= SPL BLD CG ":.";r+= SPL"\n";
+    // r+= " " UL ".:" MOB CN BLD "[" CR "E" CN "]/[" CG "Q" CN "]" RST MA ">\t";r+= "zoom" CR "2" MA BLD "/" RST CG  "0.5" RST "\n";
+    // r+= MOB "                  ";r+= RST BLD CG ":.";r+= RST"\n";
+    // r += OG " :" OW CN BLD "[" CB "Z" CN "]/[" CC "X" CN "]" RST CW ">\t" CB "previous" CW BLD "/" RST CC  "next" RST  " color palette\n" RST;
+    // r += OG "                 ";r+= RST BLD CG ":.";r+= RST"\n";
+    // r += OG " :" OW CR BLD "[ESC]" RST CW ">\t" RST CR "Exit program.\n";
+    // r += OG "                 ";r+= RST BLD CG ":.";r+= RST"\n";
     // LEFTCLIC 
     // r += " left clic:\twindow's center point = clicked point\n\t\tzoom x 5\n";
     // RIGHTCLIC
@@ -87,13 +97,13 @@ const std::string    displayManual(void) {
     // r+=" [R/F]:\t\titeration +/- 1\n";
     // A/D/windowWidth/S
     // r += " A/D/windowWidth/S:\t";
-    // r+=SPL"origin point ◄/►/▲/▼\n";
+    // r+=RST"origin point ◄/►/▲/▼\n";
     //Z/X
 }
 const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
-    std::string s(BLD ON CW " "); s += n + ":"; for (std::string::size_type a = 18; a > n.length(); a--) s += " "; s+= SPL "\n";
+    std::string s(BLD ON CW " "); s += n + ":"; for (std::string::size_type a = 18; a > n.length(); a--) s += " "; s+= RST "\n";
     s += ON;
-    for (std::string::size_type a = 20; a > 0; a--) s += " "; s += SPL "\n";
+    for (std::string::size_type a = 20; a > 0; a--) s += " "; s += RST "\n";
     s += BLD ON CW;// s+= ON CN BLD;
     for (std::vector<sf::Color>::const_iterator it = v.begin(); it != v.end(); it++){
         s += ON " " OR;
@@ -102,10 +112,10 @@ const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>
         for (char a = 3; a > integerLength((int)it->g); a--) s += " "; s += " ";
         s += std::to_string((int)it->g) + " " ON; s += " " OB;
         for (char a = 3; a > integerLength((int)it->b); a--) s += " "; s += " ";
-        s += std::to_string((int)it->b) + " " ON " "; s += SPL"\n";
+        s += std::to_string((int)it->b) + " " ON " "; s += RST"\n";
         s += BLD ON CW;
     }
-    for (std::string::size_type a = 20; a > 0; a--) s += " "; s += SPL "\n";
+    for (std::string::size_type a = 20; a > 0; a--) s += " "; s += RST "\n";
     return s;
 }
 
@@ -115,6 +125,8 @@ sf::Color linear_interpolation(const sf::Color& v, const sf::Color& u, double a)
 std::map<const std::string, std::vector<sf::Color> > loadColors() {
     std::map<const std::string, std::vector<sf::Color> >  colors;
     std::ifstream                       ifs("colorPalett", std::ios::in);
+    if (!ifs) {std::cerr << "Error: can't open colorPalett." << std::endl; return colors;}
+    if (!ifs) {std::cerr << "Error: can't open colorPalett." << std::endl; return colors;}
     if (!ifs) {std::cerr << "Error: can't open colorPalett." << std::endl; return colors;}
     std::string                         fileContent = "", s = "", nTmp = "", nTmp2;
     std::vector<sf::Color>              vTmp, vTmp2;
