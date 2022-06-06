@@ -53,24 +53,23 @@ const std::string    displayManual(void) {
     std::string r = (RST CG "░▒▓" OG CY " CONTROLS " RST UL CG "▓▒░" RST "\n");
 
     r += OR CW "[R]";
-    r += RST CW "/";
+    r += RST CW "|";
     r += OC CW "[F]";
-    r += RST CW " =" RST " iteration " BLD UL CR "+" RST CW "-" CW "1\n"; r+= RST "\n";
+    r += RST CW " =" RST " iteration " BLD CR "+" RST CW "|" CC "-" CW "1\n"; r+= RST "\n";
 
     r += OR CW "[E]";
-    r += RST CW "/";
+    r += RST CW "|";
     r += OC CW "[Q]";
-    r += RST CW " =" RST " Zoom x " BLD UL CR "2" RST CW "/" CC "0.5\n"; r+= RST "\n";
+    r += RST CW " =" RST " Zoom *" BLD CR "2" RST CW "|" CC "0.5\n"; r+= RST "\n";
 
     r += OR CW "[W]";
-    r += RST CW "/";
+    r += RST CW "|";
     r += OC CW "[S]";
-    r += RST CW "/";
+    r += RST CW "|";
     r += OG CW "[D]";
-    r += RST CW "/";
+    r += RST CW "|";
     r += OP CW "[A]";
-    r += RST CW " = View origin "
-    ;r += CG ;r += CC "↑";r += CW "/";r += CR "↓";"→";r += CW "/";r += CW "/"r += CP "←"; r+= RST "\n";
+    r += RST CW " = View origin ";r+= CG CC "↑";r += CW "|";r += CR "↓";r += CW "|";r+= CG "→";r += CW "|";r += CP "←"; r+= RST "\n";
 
     r += RST CG "░▒▓███████████▓▒░\n";r+= RST;
 
