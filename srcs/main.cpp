@@ -50,7 +50,7 @@ int     integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i)
 ░▒▓█ STRING GENERATOR █▓▒░
 ░▒▓████████████████████▓▒░*/
 const std::string    displayManual(void) {
-    std::string r = (RST CG "░▒▓" OG CY " CONTROLS " RST UL CG "▓▒░" RST "\n");
+    std::string r = (RST CW "░▒▓" OW CN "CONTROLS" RST UL CW "▓▒░" RST "\n\n");
 
     r += OR CW "[R]";
     r += RST CW "|";
@@ -60,7 +60,7 @@ const std::string    displayManual(void) {
     r += OR CW "[E]";
     r += RST CW "|";
     r += OC CW "[Q]";
-    r += RST CW " =" RST " Zoom *" BLD CR "2" RST CW "|" CC "0.5\n"; r+= RST "\n";
+    r += RST CW " =" RST " Zoom *" BLD CR "2" RST CW "|" CC "1/2\n"; r+= RST "\n";
 
     r += OR CW "[W]";
     r += RST CW "|";
@@ -69,9 +69,9 @@ const std::string    displayManual(void) {
     r += OG CW "[D]";
     r += RST CW "|";
     r += OP CW "[A]";
-    r += RST CW " = View origin ";r+= CG CC "↑";r += CW "|";r += CR "↓";r += CW "|";r+= CG "→";r += CW "|";r += CP "←"; r+= RST "\n";
+    r += RST CW " = View origin ";r+= CG CC "↑";r += CW "|";r += CR "↓";r += CW "|";r+= CG "→";r += CW "|";r += CP "←"; r+= RST "\n\n";
 
-    r += RST CG "░▒▓███████████▓▒░\n";r+= RST;
+    r += RST CW "░▒▓████████▓▒░\n";r+= RST;
 
     return r;
 }
