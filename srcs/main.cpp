@@ -1,11 +1,3 @@
-// ░▒▓█
-// █▓▒░
-//【】〔〕〖〗〚〛
-// █【█】█〔█〕█〖█〗█〚█〛█
-// 】【〕〔〗〖〛〚
-// █】█【█〕█〔█〗█〖█〛█〚█
-// ▲►▼◄ ◣◢◤◥〓
-//████████████████████████████████
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -43,11 +35,7 @@
 #define OL      "\033[7m"  // overline
 #define RST	    "\033[0m"  // effect/color reset
 
-//░▒▓█|A DEPLACÉ|█▓▒░
-int max_iter = 128;
-double zoom = 1.0;
-double min_re = -2.5, max_re = 1;
-double min_im = -1, max_im = 1;
+
 /*░▒▓█████████▓▒░
   ░▒▓█ UTILS █▓▒░
   ░▒▓█████████▓▒░*/
@@ -57,13 +45,15 @@ bool    isDigit(const char& c) {return (c >= '0' && c <= '9') ? true : false;}
 bool    isInteger(const char* s) {for (std::string::size_type i = 0; i < strlen(s); i++) if (!isDigit(s[i])) return false; return true;}
 int     integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i) return r; else i /= 10;}}
 //【 】〔〕 〖〗 〚〛← ↑ → ↓
-/*░▒▓████████████████████▓▒░
-  ░▒▓█ STRING GENERATOR █▓▒░
-  ░▒▓████████████████████▓▒░*/
+/*
+░▒▓████████████████████▓▒░
+░▒▓█ STRING GENERATOR █▓▒░
+░▒▓████████████████████▓▒░*/
 const std::string    displayManual(void) {
     std::string r = "";
-    r += RST BLD UL CN " .:";r += RST BLD OW CN "CONTROLS MANUAL";r += RST BLD UL CN ":. ";r+= RST "\n   ";
-    r += OW BLD CN "[E/Q]" RST CW "=" RST " Zoom x " BLD UL "2/0.5\n";r+= RST "\n\t";
+    r += RST BLD UL CW "░▒▓█";r += RST BLD OW CN "CONTROLS MANUAL";r += RST BLD UL CW "█▓▒░";r+= RST "\n\n";
+    r += "    " OW BLD CN "[E/Q]" RST CW " =" RST " Zoom x " BLD UL "2/0.5\n";r+= RST "\n";
+    r += RST BLD UL CW "░▒▓█████████████████▓▒░";r+= RST;
     // r += OW CN BLD"[R/F]" ON CW"=" RST ON" Iterations " BLD UL"+/-" RST ON " x                   \n";
     // r+= "                                     \n";
     // r += OW CN BLD"[A/D/W/S]" ON CW"=" RST ON" Window's origin " BLD UL"←/→/↑/↓\n";
@@ -97,6 +87,7 @@ const std::string    displayManual(void) {
     // r+=RST"origin point ◄/►/▲/▼\n";
     //Z/X
 }
+
 const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
     std::string s(BLD ON CW " "); s += n + ":"; for (std::string::size_type a = 18; a > n.length(); a--) s += " "; s+= RST "\n";
     s += ON;
@@ -163,6 +154,12 @@ std::map<const std::string, std::vector<sf::Color> > loadColors() {
     }
     return colors;
 }
+
+//░▒▓█|A DEPLACÉ|█▓▒░
+int max_iter = 128;
+double zoom = 1.0;
+double min_re = -2.5, max_re = 1;
+double min_im = -1, max_im = 1;
 
 sf::Color calculMandelbrotPixel(std::vector<sf::Color> colors, int x, int y, int windowWidth, int windowHeight){
         double cr = min_re + (max_re - min_re) * x / windowWidth;
@@ -246,8 +243,7 @@ int main(int ac, char **av){
     // if (colors.empty()) return 1;
     // std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalett = colors.begin();
     // std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalettEnd = colors.end(); if (colors.size() > 1) colorPalettEnd--;
-    std::cout << displayManual() << std::endl;
-return 0;
+std::cout << displayManual();return 0;
 //     while (window.isOpen()){
 //         sf::Event e;
 //         while (window.pollEvent(e)){
