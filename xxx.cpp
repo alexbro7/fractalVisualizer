@@ -70,7 +70,7 @@ const std::string    displayManual(void) {
     r += OC CW "F]";
     r += RST CW " =" RST " iteration" BLD CR "+" CC "-" CW "1\n"; r+= RST "\n";
 
-    r += "[C] = display color pallete\n";
+
 
     r += RST CW "░▒▓████████▓▒░\n";r+= RST;
 
@@ -278,7 +278,7 @@ int main(int ac, char **av){
                     std::cout << vecClrToStr(colorPalett->first, colorPalett->second) << std::endl;
                 }
             }
-            if (e.type == sf::Event::MouseButtonPressed || e.type == sf::Event::MouseWheelScrolled) {
+            if (e.type == sf::Event::MouseWheelScrolled || e.type == sf::Event::MouseButtonPressed){
                 auto zoom_x = [&](double z){
                     // mouse point will be new center point
                     double cr = min_re + (max_re - min_re) * e.mouseButton.x / windowWidth;
@@ -293,17 +293,15 @@ int main(int ac, char **av){
                     max_im = ci + (max_im - min_im) / 2 / z;
                     min_im = tmini;
                 };
-                // if (e.mouseButton.button == sf::Mouse::Left) {zoom_x(5); ; zoom *= 5;}
-                // if (e.mouseButton.button == sf::Mouse::Right) {zoom_x(1.0 / 5); zoom /= 5;}
+                if (e.mouseButton.button == sf::Mouse::Left) {zoom_x(5); ; zoom *= 5;}
+                if (e.mouseButton.button == sf::Mouse::Right) {zoom_x(1.0 / 5); zoom /= 5;}
                 if (e.MouseWheelScrolled){
                     if (e.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel){
-                        if (e.mouseWheelScroll.delta > 0) {zoom_x(1.05); zoom *= 1.05;}
-                        else {zoom_x(1.0 / 1.05); zoom /= 1.05;}
-                        // if (max_iter < 1) max_iter = 1;
+                        if (e.mouseWheelScroll.delta > 0) zoom_x(1.05); zoom *= 1.05;
+                        if (e.mouseWheelScroll.delta < 0) zoom_x(1.0 / 1.05); zoom /= 1.05;
                     }
                 }
             }
-        }
         window.clear();
         draw(&image, colorPalett->second, windowWidth, windowHeight);
         texture.loadFromImage(image);
