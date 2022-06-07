@@ -293,13 +293,18 @@ int main(int ac, char **av){
                     max_im = ci + (max_im - min_im) / 2 / z;
                     min_im = tmini;
                 };
-                // if (e.mouseButton.button == sf::Mouse::Left) {zoom_x(5); ; zoom *= 5;}
-                // if (e.mouseButton.button == sf::Mouse::Right) {zoom_x(1.0 / 5); zoom /= 5;}
+                if (e.mouseButton.button == sf::Mouse::Left) {zoom_x(5); zoom *= 5;}
+                if (e.mouseButton.button == sf::Mouse::Right) {zoom_x(1.0 / 5); zoom /= 5;}
                 if (e.MouseWheelScrolled){
                     if (e.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel){
-                        if (e.mouseWheelScroll.delta > 0) {zoom_x(1.05); zoom *= 1.05;}
-                        else {zoom_x(1.0 / 1.05); zoom /= 1.05;}
+                        // if (e.mouseWheelScroll.delta > 0)
+                        //     {zoom_x(2); zoom *= 2;}
+                        // else {zoom_x(1 / 2); zoom /= 2;}
                         // if (max_iter < 1) max_iter = 1;
+                        if (e.mouseWheelScroll.delta > 0)
+                            {zoom_x(5); zoom *= 2;}
+                        else {zoom_x(1 / 2); zoom /= 2;}
+                        if (max_iter < 1) max_iter = 1;
                     }
                 }
             }
