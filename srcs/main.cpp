@@ -35,6 +35,7 @@
 #define OL      "\033[7m"  // overline
 #define RST	    "\033[0m"  // effect/color reset
 
+#define ZOOM_ITERATION 3
 
 /*░▒▓█████████▓▒░
   ░▒▓█ UTILS █▓▒░
@@ -63,7 +64,7 @@ const std::string    displayManual(void) {
 
     r += OR CW "[E";
     r += OC CW "Q]";
-    r += RST CW " =" RST " Zoom" BLD CW"*" CR "2" CC "1/2\n"; r+= RST "\n";
+    r += RST CW " =" RST " Zoom" BLD CW"*" CR;r+= ZOOM_ITERATION;r+= CC "1/3\n"; r+= RST "\n";
 
     r += OR CW "[R";
     r += OC CW "F]";
@@ -215,7 +216,6 @@ void draw(sf::Image *image, std::vector<sf::Color> colors, const int &windowWidt
     }
 }
 /**/
-
 int main(int ac, char **av){
     if (ac != 2) {std::cerr << "Error: invalid number of arguments. Use \"./fractol <window's width>\"" << std::endl; return 1;}
     if (!isInteger(av[1])) {std::cerr << "Error: invalid width." << std::endl; return 1;}
@@ -231,7 +231,8 @@ int main(int ac, char **av){
     if (colors.empty()) return 1;
     std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalett = colors.begin();
     std::map<const std::string, std::vector<sf::Color> >::const_iterator colorPalettEnd = colors.end(); if (colors.size() > 1) colorPalettEnd--;
-std::cout << displayManual();return 0;
+    unsigned long x = ZOOM_ITERATION;
+    std::cout << displayManual();//return 0;
     while (window.isOpen()){
         sf::Event e;
         while (window.pollEvent(e)){
@@ -243,23 +244,23 @@ std::cout << displayManual();return 0;
                 if (e.key.code == sf::Keyboard::S) {double h = (max_im - min_im) * 0.3; min_im += h; max_im += h;}
                 if (e.key.code == sf::Keyboard::F) {max_iter -= 10; if (max_iter < 1) max_iter = 1;}
                 if (e.key.code == sf::Keyboard::R) {max_iter += 10; if (max_iter < 1) max_iter = 1;}
-                if (e.key.code == sf::Keyboard::Q || e.key.code == sf::Keyboard::E){
+                if (e.key.code == sf::Keyboard::Q || e.key.code == sf::Keyboard::E){    
                     auto zoom_x = [&](double z){
                         // mouse point will be new center point
-                        double cr = min_re + (max_re - min_re) * (windowWidth/2) / windowWidth;
-                        double ci = min_im + (max_im - min_im) * (windowHeight/2) / windowHeight;
+                        double cr = min_re + (max_re - min_re) * (windowWidth/ZOOM_ITERATION) / windowWidth;
+                        double ci = min_im + (max_im - min_im) * (windowHeight/ZOOM_ITERATION) / windowHeight;
 
                         // zoon
-                        double tminr = cr - (max_re - min_re) / 2 / z;
-                        max_re = cr + (max_re - min_re) / 2 / z;
+                        double tminr = cr - (max_re - min_re) / ZOOM_ITERATION / z;
+                        max_re = cr + (max_re - min_re) / ZOOM_ITERATION / z;
                         min_re = tminr;
 
-                        double tmini = ci - (max_im - min_im) / 2 / z;
-                        max_im = ci + (max_im - min_im) / 2 / z;
+                        double tmini = ci - (max_im - min_im) / ZOOM_ITERATION / z;
+                        max_im = ci + (max_im - min_im) / ZOOM_ITERATION / z;
                         min_im = tmini;
                     };
-                    if (e.key.code == sf::Keyboard::Q) {zoom_x(1.0 / 2); zoom /= 2;}
-                    if (e.key.code == sf::Keyboard::E) {zoom_x(2); ; zoom *= 2;}
+                    if (e.key.code == sf::Keyboard::Q) {zoom_x(1.0 / 3); zoom /= ZOOM_ITERATION;}
+                    if (e.key.code == sf::Keyboard::E) {zoom_x(3); ; zoom *= ZOOM_ITERATION;}
                 }
                 if (e.key.code == sf::Keyboard::M) displayManual(); std::cout << std::endl;
                 if (e.key.code == sf::Keyboard::Z && colors.size() > 1) {
