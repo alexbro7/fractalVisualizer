@@ -10,6 +10,8 @@
 #include <thread>
 /*░▒▓██████████████▓▒░*/
 /*░▒▓█   DEFINES   █▓▒░*/
+#define ZOOM_ITERATION 3
+#define NB_THREADS 8
 /*░▒▓█ TEXT COLORS █▓▒░*/
 #define CN      "\033[30m" // color_gray
 #define CR      "\033[31m" // color_red
@@ -57,7 +59,7 @@ const std::string    displayManual(void) {
 
     r += OR CW "[E";
     r += OC CW "Q]";
-    r += RST CW " =" RST " Zoom" BLD CW"*" CR;r+= ZOOM_ITERATION;r+= CC "1/3\n"; r+= RST "\n";
+    r += RST CW " =" RST " Zoom" BLD CW"*" CR;r+= ZOOM_ITERATION ;r+= CC "1/3\n"; r+= RST "\n";
 
     r += OR CW "[R";
     r += OC CW "F]";
@@ -70,26 +72,6 @@ const std::string    displayManual(void) {
     return r;
 }
 /*░▒▓█     COLOR SET    █▓▒░*/
-const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
-    std::string s(BLD ON CW " "); s += n + ":"; for (std::string::size_type a = 18; a > n.length(); a--) s += " "; s+= RST "\n";
-    s += ON;
-    for (std::string::size_type a = 20; a > 0; a--) s += " "; s += RST "\n";
-    s += BLD ON CW;// s+= ON CN BLD;
-    for (std::vector<sf::Color>::const_iterator it = v.begin(); it != v.end(); it++){
-        s += ON " " OR;
-        for (char a = 3; a > integerLength((int)it->r); a--) s += " "; s += " ";
-        s += " "; s += std::to_string((int)it->r) + " " ON; s += " " OG;
-        for (char a = 3; a > integerLength((int)it->g); a--) s += " "; s += " ";
-        s += std::to_string((int)it->g) + " " ON; s += " " OB;
-        for (char a = 3; a > integerLength((int)it->b); a--) s += " "; s += " ";
-        s += std::to_string((int)it->b) + " " ON " "; s += RST"\n";
-        s += BLD ON CW;
-    }
-    for (std::string::size_type a = 20; a > 0; a--) s += " "; s += RST "\n";
-    return s;
-}
-/*░▒▓███████████████████▓▒░*/
-/*░▒▓█     COLOR-SET    █▓▒░*/
 const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
     std::string s(BLD ON CW " "); s += n + ":"; for (std::string::size_type a = 18; a > n.length(); a--) s += " "; s+= RST "\n";
     s += ON;
@@ -156,6 +138,51 @@ std::map<const std::string, std::vector<sf::Color> > loadColors() {
     }
     return colors;
 }
+
+int max_iter = 128;
+double zoom = 1.0;
+double min_re = -2.5, max_re = 1;
+double min_im = -1, max_im = 1;
+
+sf::Color calculMandelbrotPixel(std::vector<sf::Color> colors, int x, int y, int windowWidth, int windowHeight){
+        double cr = min_re + (max_re - min_re) * x / windowWidth;
+        double ci = min_im + (max_im - min_im) * y / windowHeight;
+        double re = 0, im = 0;
+        int iter;
+        for (iter = 0; iter < max_iter; iter++){
+            double tr = re * re - im * im + cr;
+            im = 2 * re * im + ci;
+            re = tr;
+            if (re * re + im * im > 2 * 2) break;
+        }
+        // int r = 1.0 * (max_iter - iter) / max_iter * 0xff;
+        // int g = r, b = r;
+
+
+        static const auto max_color = colors.size() - 1;
+        if (iter == max_iter) iter = 0;
+        double mu = 1.0 * iter / max_iter;
+        //scale mu to be in the range of colors
+        mu *= max_color;
+        auto i_mu = static_cast<size_t>(mu);
+        const sf::Color color1 = colors[i_mu];
+        const sf::Color color2 = colors[std::min(i_mu + 1, max_color)];
+        return linear_interpolation(color1, color2, mu - i_mu);
+}
+void threading(int part, int windowWidth, int windowHeight, std::vector<sf::Color> colors, sf::Image &image)
+{
+    int x, y;
+    int i = (windowWidth * windowHeight) / NB_THREADS * part;  // the start pixel of the current thread
+    int end = ((windowWidth * windowHeight) / NB_THREADS) + i; // the end pixel of the current thread
+    for (; (i < windowWidth * windowHeight) && (i < end); i++) // while max pixel, or max pixel in this thread
+    {
+        x = i % windowWidth;
+        y = i / windowWidth;
+        sf::Color c = calculMandelbrotPixel(colors, x, y, windowWidth, windowHeight);
+        image.setPixel(x, y, c);
+    }
+}
+#define NB_THREADS 8
 
 void draw(sf::Image *image, std::vector<sf::Color> colors, const int &windowWidth, const int &windowHeight)
 {
