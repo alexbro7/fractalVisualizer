@@ -52,14 +52,12 @@ int     integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i)
 const std::string    displayManual(void) {
     std::string r = (RST CW "░▒▓" OW CN "CONTROLS" RST UL CW "▓▒░" RST "\n\n");
 
-    r += OR CW "[R]";
-    r += RST CW "|";
-    r += OC CW "[F]";
+    r += OR CW "[R";
+    r += OC CW "F]";
     r += RST CW " =" RST " iteration" BLD CR "+" CC "-" CW "1\n"; r+= RST "\n";
 
-    r += OR CW "[E]";
-    r += RST CW "|";
-    r += OC CW "[Q]";
+    r += OR CW "[E";
+    r += OC CW "Q]";
     r += RST CW " =" RST " Zoom" BLD CW"*" CR "2" CC "1/2\n"; r+= RST "\n";
 
     r += OR CW "[W]";
