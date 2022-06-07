@@ -60,7 +60,7 @@ const std::string    displayManual(void) {
     r += OR CW "[E]";
     r += RST CW "|";
     r += OC CW "[Q]";
-    r += RST CW " =" RST " Zoom" BLD "*" CR "2" RST CW "|" CC "1/2\n"; r+= RST "\n";
+    r += RST CW " =" RST " Zoom" BLD CW"*" CR "2" RST CW "|" CC "1/2\n"; r+= RST "\n";
 
     r += OR CW "[W]";
     r += RST CW "|";
