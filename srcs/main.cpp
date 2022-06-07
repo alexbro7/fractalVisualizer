@@ -55,12 +55,12 @@ const std::string    displayManual(void) {
     r += OR CW "[R]";
     r += RST CW "|";
     r += OC CW "[F]";
-    r += RST CW " =" RST " iteration" BLD CR "+" RST CW "|" CC "-" CW "1\n"; r+= RST "\n";
+    r += RST CW " =" RST " iteration" BLD CR "+" CC "-" CW "1\n"; r+= RST "\n";
 
     r += OR CW "[E]";
     r += RST CW "|";
     r += OC CW "[Q]";
-    r += RST CW " =" RST " Zoom" BLD CW"*" CR "2" RST CW "|" CC "1/2\n"; r+= RST "\n";
+    r += RST CW " =" RST " Zoom" BLD CW"*" CR "2" CC "1/2\n"; r+= RST "\n";
 
     r += OR CW "[W]";
     r += RST CW "|";
