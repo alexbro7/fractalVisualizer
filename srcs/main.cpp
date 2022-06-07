@@ -1,3 +1,5 @@
+/*░▒▓██████████████▓▒░*/
+/*░▒▓█  INCLUDES  █▓▒░*/
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -6,10 +8,9 @@
 #include <cstring>
 #include <SFML/Graphics.hpp>
 #include <thread>
-
-//░▒▓███████████████▓▒░
-//░▒▓█ TEXT COLORS █▓▒░
-//░▒▓███████████████▓▒░
+/*░▒▓██████████████▓▒░*/
+/*░▒▓█   DEFINES   █▓▒░*/
+/*░▒▓█ TEXT COLORS █▓▒░*/
 #define CN      "\033[30m" // color_gray
 #define CR      "\033[31m" // color_red
 #define CG      "\033[32m" // color_green
@@ -26,30 +27,22 @@
 #define OY      "\033[43m" // overline_yellow
 #define OC      "\033[46m" // overline_cyan
 #define OW      "\033[47m" // overline_white
-//░▒▓██████████████▓▒░
-//░▒▓ TEXT EFFECTS ▓▒░
-//░▒▓██████████████▓▒░
+/*░▒▓ TEXT EFFECTS ▓▒░*/
 #define BLD	    "\033[1m"  // bold 
 #define UL      "\033[4m"  // underline
 #define FLH     "\033[5m"  // bold 
 #define OL      "\033[7m"  // overline
 #define RST	    "\033[0m"  // effect/color reset
-
-#define ZOOM_ITERATION 3
-
-/*░▒▓█████████▓▒░
-  ░▒▓█ UTILS █▓▒░
-  ░▒▓█████████▓▒░*/
+/*░▒▓█████████▓▒░*/
+/*░▒▓█ UTILS █▓▒░*/
 bool    error_msg(const std::string& s) {std::cerr << s << std::endl; return false;}
 bool    isBlank(const char& c) {return (c == ' ' || c == '\n' || c == '\t' || c == '\v' || c == '\f' || c == '\r') ? true : false;}
 bool    isDigit(const char& c) {return (c >= '0' && c <= '9') ? true : false;}
 bool    isInteger(const char* s) {for (std::string::size_type i = 0; i < strlen(s); i++) if (!isDigit(s[i])) return false; return true;}
 int     integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i) return r; else i /= 10;}}
-//【 】〔〕 〖〗 〚〛
-/*
-░▒▓████████████████████▓▒░
-░▒▓█ STRING GENERATOR █▓▒░
-░▒▓████████████████████▓▒░*/
+/*░▒▓████████████████████▓▒░*/
+/*░▒▓█ STRING GENERATOR █▓▒░*/
+/*░▒▓█      MANUAL      █▓▒░*/
 const std::string    displayManual(void) {
     std::string r = (RST CW "░▒▓" OW CN "CONTROLS" RST UL CW "▓▒░" RST "\n\n");
 
@@ -76,7 +69,7 @@ const std::string    displayManual(void) {
 
     return r;
 }
-
+/*░▒▓█     COLOR SET    █▓▒░*/
 const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
     std::string s(BLD ON CW " "); s += n + ":"; for (std::string::size_type a = 18; a > n.length(); a--) s += " "; s+= RST "\n";
     s += ON;
@@ -95,8 +88,28 @@ const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>
     for (std::string::size_type a = 20; a > 0; a--) s += " "; s += RST "\n";
     return s;
 }
-
-
+/*░▒▓███████████████████▓▒░*/
+/*░▒▓█     COLOR-SET    █▓▒░*/
+const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
+    std::string s(BLD ON CW " "); s += n + ":"; for (std::string::size_type a = 18; a > n.length(); a--) s += " "; s+= RST "\n";
+    s += ON;
+    for (std::string::size_type a = 20; a > 0; a--) s += " "; s += RST "\n";
+    s += BLD ON CW;// s+= ON CN BLD;
+    for (std::vector<sf::Color>::const_iterator it = v.begin(); it != v.end(); it++){
+        s += ON " " OR;
+        for (char a = 3; a > integerLength((int)it->r); a--) s += " "; s += " ";
+        s += " "; s += std::to_string((int)it->r) + " " ON; s += " " OG;
+        for (char a = 3; a > integerLength((int)it->g); a--) s += " "; s += " ";
+        s += std::to_string((int)it->g) + " " ON; s += " " OB;
+        for (char a = 3; a > integerLength((int)it->b); a--) s += " "; s += " ";
+        s += std::to_string((int)it->b) + " " ON " "; s += RST"\n";
+        s += BLD ON CW;
+    }
+    for (std::string::size_type a = 20; a > 0; a--) s += " "; s += RST "\n";
+    return s;
+}
+/*░▒▓█████████████████████▓▒░*/
+/*░▒▓█ COLORS_MANAGEMENT █▓▒░*/
 sf::Color linear_interpolation(const sf::Color& v, const sf::Color& u, double a) {auto const b = 1 - a; return sf::Color(b*v.r + a * u.r, b * v.g + a * u.g, b * v.b + a * u.b);}
 
 std::map<const std::string, std::vector<sf::Color> > loadColors() {
@@ -144,64 +157,6 @@ std::map<const std::string, std::vector<sf::Color> > loadColors() {
     return colors;
 }
 
-//░▒▓█|A DEPLACÉ|█▓▒░
-int max_iter = 128;
-double zoom = 1.0;
-double min_re = -2.5, max_re = 1;
-double min_im = -1, max_im = 1;
-
-sf::Color calculMandelbrotPixel(std::vector<sf::Color> colors, int x, int y, int windowWidth, int windowHeight){
-        double cr = min_re + (max_re - min_re) * x / windowWidth;
-        double ci = min_im + (max_im - min_im) * y / windowHeight;
-        double re = 0, im = 0;
-        int iter;
-        for (iter = 0; iter < max_iter; iter++){
-            double tr = re * re - im * im + cr;
-            im = 2 * re * im + ci;
-            re = tr;
-            if (re * re + im * im > 2 * 2) break;
-        }
-        // int r = 1.0 * (max_iter - iter) / max_iter * 0xff;
-        // int g = r, b = r;
-
-
-        static const auto max_color = colors.size() - 1;
-        if (iter == max_iter) iter = 0;
-        double mu = 1.0 * iter / max_iter;
-        //scale mu to be in the range of colors
-        mu *= max_color;
-        auto i_mu = static_cast<size_t>(mu);
-        const sf::Color color1 = colors[i_mu];
-        const sf::Color color2 = colors[std::min(i_mu + 1, max_color)];
-        return linear_interpolation(color1, color2, mu - i_mu);
-}
-
-// #define NB_THREADS 1
-// void draw(sf::Image *image, std::string colorsName, std::vector<sf::Color> colors, const int& windowWidth, const int& windowHeight){
-//     int thread_id = 0, x, y;
-//     for (int i = 0; i < windowWidth * windowHeight; i++){
-//         if (thread_id == NB_THREADS) thread_id = 0;
-//         x = i % windowWidth; y = i / windowWidth;
-//         image->setPixel(x, y, calculMandelbrotPixel(colors, x, y, windowWidth, windowHeight));
-//         thread_id++;
-//     }
-// }
-#define NB_THREADS 8
-
-void threading(int part, int windowWidth, int windowHeight, std::vector<sf::Color> colors, sf::Image &image)
-{
-    int x, y;
-    int i = (windowWidth * windowHeight) / NB_THREADS * part;  // the start pixel of the current thread
-    int end = ((windowWidth * windowHeight) / NB_THREADS) + i; // the end pixel of the current thread
-    for (; (i < windowWidth * windowHeight) && (i < end); i++) // while max pixel, or max pixel in this thread
-    {
-        x = i % windowWidth;
-        y = i / windowWidth;
-        sf::Color c = calculMandelbrotPixel(colors, x, y, windowWidth, windowHeight);
-        image.setPixel(x, y, c);
-    }
-}
-
 void draw(sf::Image *image, std::vector<sf::Color> colors, const int &windowWidth, const int &windowHeight)
 {
     std::thread t[windowWidth * windowHeight];
@@ -215,7 +170,8 @@ void draw(sf::Image *image, std::vector<sf::Color> colors, const int &windowWidt
         t[i].join();
     }
 }
-/**/
+#define ZOOM_ITERATION 3
+
 int main(int ac, char **av){
     if (ac != 2) {std::cerr << "Error: invalid number of arguments. Use \"./fractol <window's width>\"" << std::endl; return 1;}
     if (!isInteger(av[1])) {std::cerr << "Error: invalid width." << std::endl; return 1;}
