@@ -52,23 +52,18 @@ const std::string    displayManual(void) {
     r += RST CW "|";
     r += OC CW "[S]";
     r += RST CW "|";
-    r += OG CW "[D]";
+    r += OG CW "[A]";
     r += RST CW "|";
-    r += OP CW "[A]";
-    r += RST CW " = View origin ";r+= CG CC "↑";r += CW "|";r += CR "↓";r += CW "|";r+= CG "→";r += CW "|";r += CP "←"; r+= RST "\n\n";
-
+    r += OP CW "[D]";
+    r += RST CW " = View origin ";r+= CG CC "↑";r += CW "|";r += CR "↓";r += CW "|";r+= CG "←";r += CW "|";r += CP "→"; r+= RST "\n\n";
     r += OR CW "[E";
     r += OC CW "Q]";
-    r += RST CW " =" RST " Zoom" BLD CW"*" CR;r+= ZOOM_ITERATION ;r+= CC "1/3\n"; r+= RST "\n";
-
+    r += RST CW " =" RST " Zoom" BLD CW"*" CR;r+= std::to_string(ZOOM_ITERATION);r+= CC "0.3\n"; r+= RST "\n";
     r += OR CW "[R";
     r += OC CW "F]";
     r += RST CW " =" RST " iteration" BLD CR "+" CC "-" CW "1\n"; r+= RST "\n";
-
-    r += "[C] = display color pallete\n";
-
+    r +=  OW BLD CN "[C]";r+= RST " = display color pallete\n\n";
     r += RST CW "░▒▓████████▓▒░\n";r+= RST;
-
     return r;
 }
 /*░▒▓█     COLOR SET    █▓▒░*/
@@ -138,12 +133,12 @@ std::map<const std::string, std::vector<sf::Color> > loadColors() {
     }
     return colors;
 }
-
+/*░▒▓███████████▓▒░*/
+/*░▒▓█ CALCULS █▓▒░*/
 int max_iter = 128;
 double zoom = 1.0;
 double min_re = -2.5, max_re = 1;
 double min_im = -1, max_im = 1;
-
 sf::Color calculMandelbrotPixel(std::vector<sf::Color> colors, int x, int y, int windowWidth, int windowHeight){
         double cr = min_re + (max_re - min_re) * x / windowWidth;
         double ci = min_im + (max_im - min_im) * y / windowHeight;
@@ -182,8 +177,7 @@ void threading(int part, int windowWidth, int windowHeight, std::vector<sf::Colo
         image.setPixel(x, y, c);
     }
 }
-#define NB_THREADS 8
-
+/*░▒▓███████████▓▒░*/
 void draw(sf::Image *image, std::vector<sf::Color> colors, const int &windowWidth, const int &windowHeight)
 {
     std::thread t[windowWidth * windowHeight];
@@ -261,36 +255,48 @@ int main(int ac, char **av){
                     std::cout << vecClrToStr(colorPalett->first, colorPalett->second) << std::endl;
                 }
             }
-            if (e.type == sf::Event::MouseButtonPressed || e.type == sf::Event::MouseWheelScrolled) {
-                auto zoom_x = [&](double z){
-                    // mouse point will be new center point
-                    double cr = min_re + (max_re - min_re) * e.mouseButton.x / windowWidth;
-                    double ci = min_im + (max_im - min_im) * e.mouseButton.y / windowHeight;
+            if (e.type == sf::Event::MouseWheelScrolled)
+			{
+				if (e.MouseWheelScrolled)
+				{
+					if (e.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
+					{
+						if (e.mouseWheelScroll.delta > 0)max_iter *= 2;
+						else max_iter /= 2;
+						if (max_iter < 1)max_iter = 1;
+					}
+				}
+			}
+            if (e.type == sf::Event::MouseButtonPressed)
+			{
+				auto zoom_x = [&](double z)
+				{
+					//mouse point will be new center point
+					double cr = min_re + (max_re - min_re)*e.mouseButton.x / windowWidth;
+					double ci = min_im + (max_im - min_im)*e.mouseButton.y / windowHeight;
 
-                    // zoon
-                    double tminr = cr - (max_re - min_re) / 2 / z;
-                    max_re = cr + (max_re - min_re) / 2 / z;
-                    min_re = tminr;
+					//zoom
+					double tminr = cr - (max_re - min_re) / 2 / z;
+					max_re = cr + (max_re - min_re) / 2 / z;
+					min_re = tminr;
 
-                    double tmini = ci - (max_im - min_im) / 2 / z;
-                    max_im = ci + (max_im - min_im) / 2 / z;
-                    min_im = tmini;
-                };
-                if (e.mouseButton.button == sf::Mouse::Left) {zoom_x(5); zoom *= 5;}
-                if (e.mouseButton.button == sf::Mouse::Right) {zoom_x(1.0 / 5); zoom /= 5;}
-                if (e.MouseWheelScrolled){
-                    if (e.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel){
-                        // if (e.mouseWheelScroll.delta > 0)
-                        //     {zoom_x(2); zoom *= 2;}
-                        // else {zoom_x(1 / 2); zoom /= 2;}
-                        // if (max_iter < 1) max_iter = 1;
-                        if (e.mouseWheelScroll.delta > 0)
-                            {zoom_x(5); zoom *= 2;}
-                        else {zoom_x(1 / 2); zoom /= 2;}
-                        if (max_iter < 1) max_iter = 1;
-                    }
-                }
-            }
+					double tmini = ci - (max_im - min_im) / 2 / z;
+					max_im = ci + (max_im - min_im) / 2 / z;
+					min_im = tmini;
+				};
+				//Left Click to ZoomIn
+				if (e.mouseButton.button == sf::Mouse::Left)
+				{
+					zoom_x(5);
+					zoom *= 5;
+				}
+				//Right Click to ZoomOut
+				if (e.mouseButton.button == sf::Mouse::Right)
+				{
+					zoom_x(1.0 / 5);
+					zoom /= 5;
+				}
+			}
         }
         window.clear();
         draw(&image, colorPalett->second, windowWidth, windowHeight);
