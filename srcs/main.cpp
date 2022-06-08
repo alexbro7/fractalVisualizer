@@ -6,12 +6,13 @@
 /*░▒▓█*/#include <map> // MAP
 /*░▒▓█*/#include <SFML/Graphics.hpp> // SF
 /*░▒▓█*/#include <thread> // THREAD
-
-/*░▒▓██████████████▓▒░*/
-/*░▒▓███ DEFINE ███▓▒░*/
+/*░▒▓█*/
+/*░▒▓███████████████▓▒░*/
+/*░▒▓███ DEFINE ████▓▒░*/
 /*░▒▓█*/ #define ZOOM_ITERATION 3 // [E]|[Q] = view scale (*|/)= ZOOM_ITERATION
 /*░▒▓█*/ #define NB_THREADS 8 // number of CPU to use
-/*░▒▓█ TEXT COLOR █▓▒░*/
+/*░▒▓█*/
+/*░▒▓█ TEXT COLOR ██▓▒░*/
 /*░▒▓█*/#define CN      "\033[30m" // color_gray
 /*░▒▓█*/#define CR      "\033[31m" // color_red
 /*░▒▓█*/#define CG      "\033[32m" // color_green
@@ -28,23 +29,26 @@
 /*░▒▓█*/#define OY      "\033[43m" // overline_yellow
 /*░▒▓█*/#define OC      "\033[46m" // overline_cyan
 /*░▒▓█*/#define OW      "\033[47m" // overline_white
-/*░▒▓ TEXT EFFECTS ▓▒░*/
+/*░▒▓█*/
+/*░▒▓█ TEXT EFFECT █▓▒░*/
 /*░▒▓█*/#define BLD	    "\033[1m"  // bold 
 /*░▒▓█*/#define UL      "\033[4m"  // underline
 /*░▒▓█*/#define FLH     "\033[5m"  // bold 
 /*░▒▓█*/#define OL      "\033[7m"  // overline
 /*░▒▓█*/#define RST	    "\033[0m"  // effect/color reset
-
-/*░▒▓█*//*░▒▓█████████▓▒░*/
-/*░▒▓█*//*░▒▓█ UTILS █▓▒░*/
+/*░▒▓█*/
+/*░▒▓█████████▓▒░*/
+/*░▒▓█ UTILS █▓▒░*/
 /*░▒▓█*/bool    error_msg(const std::string& s) {std::cerr << s << std::endl; return false;}
 /*░▒▓█*/bool    isBlank(const char& c) {return (c == ' ' || c == '\n' || c == '\t' || c == '\v' || c == '\f' || c == '\r') ? true : false;}
 /*░▒▓█*/bool    isDigit(const char& c) {return (c >= '0' && c <= '9') ? true : false;}
 /*░▒▓█*/bool    isInteger(const char* s) {for (std::string::size_type i = 0; i < strlen(s); i++) if (!isDigit(s[i])) return false; return true;}
 /*░▒▓█*/int     integerLength(int i) {if (!i) return 1; for (int r = 0; 1; r++) {if (!i) return r; else i /= 10;}}
-/*░▒▓█*//*░▒▓████████████████████▓▒░*/
-/*░▒▓█*//*░▒▓█ STRING GENERATOR █▓▒░*/
-/*░▒▓█*//*░▒▓█      MANUAL      █▓▒░*/
+/*░▒▓█*/
+/*░▒▓██████████████████▓▒░*/
+/*░▒▓█ DISPLAY STRING █▓▒░*/
+/*░▒▓█*/
+/*░▒▓█     MANUAL     █▓▒░*/
 /*░▒▓█*/const std::string    displayManual(void) {
 /*░▒▓█*/    std::string r = (RST CW "░▒▓" OW CN "CONTROLS" RST UL CW "▓▒░" RST "\n\n");
 /*░▒▓█*/
@@ -66,7 +70,7 @@
 /*░▒▓█*/    r += RST CW "░▒▓████████▓▒░\n";r+= RST;
 /*░▒▓█*/    return r;
 /*░▒▓█*/}
-/*░▒▓█*//*░▒▓█     COLOR SET    █▓▒░*/
+/*░▒▓█  COLOR PALLET  █▓▒░*/
 /*░▒▓█*/const std::string vecClrToStr(const std::string& n, const std::vector<sf::Color>& v){
 /*░▒▓█*/    std::string s(BLD ON CW " "); s += n + ":"; for (std::string::size_type a = 18; a > n.length(); a--) s += " "; s+= RST "\n";
 /*░▒▓█*/    s += ON;
@@ -85,9 +89,10 @@
 /*░▒▓█*/    for (std::string::size_type a = 20; a > 0; a--) s += " "; s += RST "\n";
 /*░▒▓█*/    return s;
 /*░▒▓█*/}
-/*░▒▓█*//*░▒▓█████████████████████▓▒░*/
-/*░▒▓█*//*░▒▓█ COLORS_MANAGEMENT █▓▒░*/
-/*░▒▓█*/sf::Color linear_interpolation(const sf::Color& v, const sf::Color& u, double a) {auto const b = 1 - a; return sf::Color(b*v.r + a * u.r, b * v.g + a * u.g, b * v.b + a * u.b);}
+/*░▒▓████████████████████▓▒░*/
+/*░▒▓█ COLOR_MANAGEMENT █▓▒░*/
+/*░▒▓█*/sf::Color linear_interpolation(const sf::Color& v, const sf::Color& u, double a)
+/*░▒▓█*/    {auto const b = 1 - a; return sf::Color(b*v.r + a * u.r, b * v.g + a * u.g, b * v.b + a * u.b);}
 /*░▒▓█*/
 /*░▒▓█*/std::map<const std::string, std::vector<sf::Color> > loadColors() {
 /*░▒▓█*/    std::map<const std::string, std::vector<sf::Color> >  colors;
@@ -133,8 +138,8 @@
 /*░▒▓█*/    }
 /*░▒▓█*/    return colors;
 /*░▒▓█*/}
-/*░▒▓█*//*░▒▓███████████▓▒░*/
-/*░▒▓█*//*░▒▓█ CALCULS █▓▒░*/
+/*░▒▓███████████▓▒░*/
+/*░▒▓█ CALCULS █▓▒░*/
 /*░▒▓█*/int max_iter = 128;
 /*░▒▓█*/double zoom = 1.0;
 /*░▒▓█*/double min_re = -2.5, max_re = 1;
@@ -177,7 +182,8 @@
 /*░▒▓█*/        image.setPixel(x, y, c);
 /*░▒▓█*/    }
 /*░▒▓█*/}
-/*░▒▓█*//*░▒▓███████████▓▒░*/
+/*░▒▓████████▓▒░*/
+/*░▒▓█ MAIN █▓▒░*/
 /*░▒▓█*/void draw(sf::Image *image, std::vector<sf::Color> colors, const int &windowWidth, const int &windowHeight)
 /*░▒▓█*/{
 /*░▒▓█*/    std::thread t[windowWidth * windowHeight];
@@ -191,7 +197,6 @@
 /*░▒▓█*/        t[i].join();
 /*░▒▓█*/    }
 /*░▒▓█*/}
-/*░▒▓█*/#define ZOOM_ITERATION 3
 /*░▒▓█*/
 /*░▒▓█*/int main(int ac, char **av){
 /*░▒▓█*/    if (ac != 2) {std::cerr << "Error: invalid number of arguments. Use \"./fractol <window's width>\"" << std::endl; return 1;}
