@@ -260,18 +260,18 @@
 /*░▒▓█*/                    std::cout << vecClrToStr(colorPalett->first, colorPalett->second) << std::endl;
 /*░▒▓█*/                }
 /*░▒▓█*/            }
-/*░▒▓█*/            if (e.type == sf::Event::MouseWheelScrolled)
-/*░▒▓█*/			{
-/*░▒▓█*/				if (e.MouseWheelScrolled)
-/*░▒▓█*/				{
-/*░▒▓█*/					if (e.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
-/*░▒▓█*/					{
-/*░▒▓█*/						if (e.mouseWheelScroll.delta > 0)max_iter *= 2;
-/*░▒▓█*/						else max_iter /= 2;
-/*░▒▓█*/						if (max_iter < 1)max_iter = 1;
-/*░▒▓█*/					}
-/*░▒▓█*/				}
-/*░▒▓█*/			}
+// /*░▒▓█*/            if (e.type == sf::Event::MouseWheelScrolled)
+// /*░▒▓█*/			{
+// /*░▒▓█*/				if (e.MouseWheelScrolled)
+// /*░▒▓█*/				{
+// /*░▒▓█*/					if (e.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
+// /*░▒▓█*/					{
+// /*░▒▓█*/						if (e.mouseWheelScroll.delta > 0)max_iter *= 2;
+// /*░▒▓█*/						else max_iter /= 2;
+// /*░▒▓█*/						if (max_iter < 1)max_iter = 1;
+// /*░▒▓█*/					}
+// /*░▒▓█*/				}
+// /*░▒▓█*/			}
 /*░▒▓█*/            if (e.type == sf::Event::MouseButtonPressed)
 /*░▒▓█*/			{
 /*░▒▓█*/				auto zoom_x = [&](double z)
