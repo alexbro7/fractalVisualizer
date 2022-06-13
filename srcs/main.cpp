@@ -141,13 +141,13 @@
 /*░▒▓███████████▓▒░*/
 /*░▒▓█ CALCULS █▓▒░*/
 /*░▒▓█*/int max_iter = 128;
-/*░▒▓█*/double zoom = 1.0;
-/*░▒▓█*/double min_re = -2.5, max_re = 1;
-/*░▒▓█*/double min_im = -1, max_im = 1;
+/*░▒▓█*/long double zoom = 1.0;
+/*░▒▓█*/long double min_re = -2.5, max_re = 1;
+/*░▒▓█*/long double min_im = -1, max_im = 1;
 /*░▒▓█*/sf::Color calculMandelbrotPixel(std::vector<sf::Color> colors, int x, int y, int windowWidth, int windowHeight){
-/*░▒▓█*/        double cr = min_re + (max_re - min_re) * x / windowWidth;
-/*░▒▓█*/        double ci = min_im + (max_im - min_im) * y / windowHeight;
-/*░▒▓█*/        double re = 0, im = 0;
+/*░▒▓█*/        long double cr = min_re + (max_re - min_re) * x / windowWidth;
+/*░▒▓█*/        long double ci = min_im + (max_im - min_im) * y / windowHeight;
+/*░▒▓█*/        long double re = 0, im = 0;
 /*░▒▓█*/        int iter;
 /*░▒▓█*/        for (iter = 0; iter < max_iter; iter++){
 /*░▒▓█*/            double tr = re * re - im * im + cr;
@@ -161,7 +161,7 @@
 /*░▒▓█*/
 /*░▒▓█*/        static const auto max_color = colors.size() - 1;
 /*░▒▓█*/        if (iter == max_iter) iter = 0;
-/*░▒▓█*/        double mu = 1.0 * iter / max_iter;
+/*░▒▓█*/        long double mu = 1.0 * iter / max_iter;
 /*░▒▓█*/        //scale mu to be in the range of colors
 /*░▒▓█*/        mu *= max_color;
 /*░▒▓█*/        auto i_mu = static_cast<size_t>(mu);
